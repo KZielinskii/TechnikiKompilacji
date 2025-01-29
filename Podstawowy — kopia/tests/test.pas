@@ -4,6 +4,6 @@ var a, b, result: integer;
 begin
   a:=1;
   b:=5;
-  result:=a+b*2;
+  result:=a mul b;
   write(result)
 end.
