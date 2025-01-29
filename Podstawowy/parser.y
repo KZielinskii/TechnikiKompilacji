@@ -35,7 +35,7 @@ program:
     PROGRAM ID 
     {
         symtable[$2].token = PROC;
-        writeCode("jump.i\t#program", "jump.i program");
+        writeCode("jump.i\t\t#program", "jump.i\t\tprogram");
     } 
     '(' program_arguments ')' ';'
     vars
@@ -45,7 +45,7 @@ program:
     BEG function_body END
     '.' DONE
     {
-        writeCode("exit\t\t", "exit");
+        writeCode("exit\t\t\t", "exit");
         return 0;
     }
     ;
@@ -88,16 +88,16 @@ vars:
     ;
 
 function_body:
-    stmts 
+    statements 
     | 
     ;
 
-stmts:
-    stmts ';' stmt 
-    | stmt 
+statements:
+    statements ';' statement 
+    | statement 
     ;
 
-stmt:
+statement:
     ID ASSIGN expression
     {
         appendAssign(symtable[$1], symtable[$3]);

@@ -128,12 +128,12 @@ std::string formatRef(symbol_t symbol)
 
 void appendWrite(symbol_t symbol)
 {
-  writeCode("write." + typeInAsm(symbol.type) + "\t" + format(symbol) + "\t", "write." + typeInAsm(symbol.type) + "\t" + (symbol.name));
+  writeCode("write." + typeInAsm(symbol.type) + "\t\t" + format(symbol) + "\t", "write." + typeInAsm(symbol.type) + "\t\t" + (symbol.name));
 }
 
 void appendRead(symbol_t symbol)
 {
-  writeCode("read." + typeInAsm(symbol.type) + "\t" + format(symbol) + "\t", "read." + typeInAsm(symbol.type) + "\t" + (symbol.name));
+  writeCode("read." + typeInAsm(symbol.type) + "\t\t" + format(symbol) + "\t", "read." + typeInAsm(symbol.type) + "\t\t" + (symbol.name));
 }
 
 void saveAsmCode(std::string fname)
