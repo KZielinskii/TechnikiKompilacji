@@ -1,9 +1,10 @@
 program example(input, output);
-var a, b, result: integer;
+var x, y: integer;
+var g,h:real;
 
 begin
-  a:=1;
-  b:=5;
-  result:=a+b*2/2;
-  write(ala)
+read(x,y);
+h:=1.5;
+g:=x+y*h;
+write(g)
 end.
