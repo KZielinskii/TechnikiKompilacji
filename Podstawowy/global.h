@@ -7,15 +7,16 @@
 #include "symbol.h"
 #include "parser.hpp"
 
-extern int errorno;
-extern int lineno;
 extern std::vector<symbol_t> symtable;
+
+extern int lineno;
+extern int errorno;
 
 int yylex_destroy();
 
-
 int insert(std::string name, int token, int type);
 int lookup(std::string name);
+
 void initSymtable();
 int getAddress(std::string name);
 int newTemp(int);
@@ -27,16 +28,14 @@ int getOperationToken(std::string);
 void printSymtable();
 
 std::string format(symbol_t s);
-std::string formatName(std::string name); //dodaje $ do name
-
-void writeCode(std::string line, std::string additional_info);
+void writeCode(std::string line, std::string addInfo);
 void writeLabel(std::string label);
 
 
-int appendRealToInt(symbol_t from, symbol_t to);
-int appendIntToReal(symbol_t from, symbol_t to);
-int append2O(symbol_t, int, symbol_t);
-int append3O(symbol_t, int, symbol_t);
+int realToInt(symbol_t from, symbol_t to);
+int intToReal(symbol_t from, symbol_t to);
+int appendMulOP(symbol_t, int, symbol_t);
+int appendAddOP(symbol_t, int, symbol_t);
 void appendAssign(symbol_t left_side, symbol_t right_side);
 void appendWrite(symbol_t symbolToWrite);
 void appendRead(symbol_t symbolToRead);
