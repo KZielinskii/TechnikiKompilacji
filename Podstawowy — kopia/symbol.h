@@ -6,8 +6,8 @@
 struct symbol_t
 {
   std::string name;
-  int token;
   int type;
+  int token;
   int address;
 };
 

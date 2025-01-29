@@ -63,14 +63,13 @@ extern int yydebug;
     ADDOP = 264,                   /* ADDOP  */
     MULOP = 265,                   /* MULOP  */
     INT = 266,                     /* INT  */
-    REAL = 267,                    /* REAL  */
-    VAL = 268,                     /* VAL  */
-    VAR = 269,                     /* VAR  */
-    ID = 270,                      /* ID  */
-    LABEL = 271,                   /* LABEL  */
-    NONE = 272,                    /* NONE  */
-    DONE = 273,                    /* DONE  */
-    PROC = 274                     /* PROC  */
+    VAL = 267,                     /* VAL  */
+    VAR = 268,                     /* VAR  */
+    ID = 269,                      /* ID  */
+    LABEL = 270,                   /* LABEL  */
+    NONE = 271,                    /* NONE  */
+    DONE = 272,                    /* DONE  */
+    PROC = 273                     /* PROC  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif

@@ -22,118 +22,116 @@ Grammar
     7     | ε
 
     8 type: INT
-    9     | REAL
 
-   10 vars: ID
-   11     | vars ',' ID
+    9 vars: ID
+   10     | vars ',' ID
 
-   12 function_body: statements
-   13              | ε
+   11 function_body: statements
+   12              | ε
 
-   14 statements: statements ';' statement
-   15           | statement
+   13 statements: statements ';' statement
+   14           | statement
 
-   16 statement: ID ASSIGN expression
-   17          | read
-   18          | write
+   15 statement: ID ASSIGN expression
+   16          | read
+   17          | write
 
-   19 expression: term
-   20           | ADDOP term
-   21           | expression ADDOP term
+   18 expression: term
+   19           | ADDOP term
+   20           | expression ADDOP term
 
-   22 term: factor
-   23     | term MULOP factor
+   21 term: factor
+   22     | term MULOP factor
 
-   24 factor: ID
-   25       | VAL
-   26       | '(' expression ')'
+   23 factor: ID
+   24       | VAL
+   25       | '(' expression ')'
 
-   27 expression_list: expression_list ',' expression
-   28                | expression
+   26 expression_list: expression_list ',' expression
+   27                | expression
 
-   29 read: READ '(' expression_list ')'
+   28 read: READ '(' expression_list ')'
 
-   30 write: WRITE '(' expression_list ')'
+   29 write: WRITE '(' expression_list ')'
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
-    '(' (40) 3 26 29 30
-    ')' (41) 3 26 29 30
-    ',' (44) 5 11 27
+    '(' (40) 3 25 28 29
+    ')' (41) 3 25 28 29
+    ',' (44) 5 10 26
     '.' (46) 3
     ':' (58) 6
-    ';' (59) 3 6 14
+    ';' (59) 3 6 13
     error (256)
     PROGRAM (258) 3
     BEG (259) 3
     END (260) 3
-    WRITE (261) 30
-    READ (262) 29
-    ASSIGN (263) 16
-    ADDOP (264) 20 21
-    MULOP (265) 23
+    WRITE (261) 29
+    READ (262) 28
+    ASSIGN (263) 15
+    ADDOP (264) 19 20
+    MULOP (265) 22
     INT (266) 8
-    REAL (267) 9
-    VAL (268) 25
-    VAR (269) 6
-    ID (270) 3 4 5 10 11 16 24
-    LABEL (271)
-    NONE (272)
-    DONE (273) 3
-    PROC (274)
+    VAL (267) 24
+    VAR (268) 6
+    ID (269) 3 4 5 9 10 15 23
+    LABEL (270)
+    NONE (271)
+    DONE (272) 3
+    PROC (273)
 
 
 Nonterminals, with rules where they appear
 
-    $accept (26)
+    $accept (25)
         on left: 0
-    program (27)
+    program (26)
         on left: 3
         on right: 0
-    $@1 (28)
+    $@1 (27)
         on left: 1
         on right: 3
-    $@2 (29)
+    $@2 (28)
         on left: 2
         on right: 3
-    program_arguments (30)
+    program_arguments (29)
         on left: 4 5
         on right: 3 5
-    vars (31)
-        on left: 6 7 10 11
-        on right: 3 6 11
-    type (32)
-        on left: 8 9
+    vars (30)
+        on left: 6 7 9 10
+        on right: 3 6 10
+    type (31)
+        on left: 8
         on right: 6
-    function_body (33)
-        on left: 12 13
+    function_body (32)
+        on left: 11 12
         on right: 3
-    statements (34)
-        on left: 14 15
-        on right: 12 14
-    statement (35)
-        on left: 16 17 18
-        on right: 14 15
-    expression (36)
-        on left: 19 20 21
-        on right: 16 21 26 27 28
-    term (37)
-        on left: 22 23
-        on right: 19 20 21 23
-    factor (38)
-        on left: 24 25 26
-        on right: 22 23
-    expression_list (39)
-        on left: 27 28
-        on right: 27 29 30
-    read (40)
+    statements (33)
+        on left: 13 14
+        on right: 11 13
+    statement (34)
+        on left: 15 16 17
+        on right: 13 14
+    expression (35)
+        on left: 18 19 20
+        on right: 15 20 25 26 27
+    term (36)
+        on left: 21 22
+        on right: 18 19 20 22
+    factor (37)
+        on left: 23 24 25
+        on right: 21 22
+    expression_list (38)
+        on left: 26 27
+        on right: 26 28 29
+    read (39)
+        on left: 28
+        on right: 16
+    write (40)
         on left: 29
         on right: 17
-    write (41)
-        on left: 30
-        on right: 18
 
 
 State 0
@@ -241,16 +239,16 @@ State 12
 
 State 13
 
-   10 vars: ID •
+    9 vars: ID •
 
-    $default  reduce using rule 10 (vars)
+    $default  reduce using rule 9 (vars)
 
 
 State 14
 
     3 program: PROGRAM ID $@1 '(' program_arguments ')' ';' vars • $@2 BEG function_body END '.' DONE
     6 vars: vars • VAR vars ':' type ';'
-   11     | vars • ',' ID
+   10     | vars • ',' ID
 
     VAR  shift, and go to state 15
     ','  shift, and go to state 16
@@ -273,7 +271,7 @@ State 15
 
 State 16
 
-   11 vars: vars ',' • ID
+   10 vars: vars ',' • ID
 
     ID  shift, and go to state 19
 
@@ -289,7 +287,7 @@ State 18
 
     6 vars: vars • VAR vars ':' type ';'
     6     | vars VAR vars • ':' type ';'
-   11     | vars • ',' ID
+   10     | vars • ',' ID
 
     VAR  shift, and go to state 15
     ','  shift, and go to state 16
@@ -298,9 +296,9 @@ State 18
 
 State 19
 
-   11 vars: vars ',' ID •
+   10 vars: vars ',' ID •
 
-    $default  reduce using rule 11 (vars)
+    $default  reduce using rule 10 (vars)
 
 
 State 20
@@ -311,7 +309,7 @@ State 20
     READ   shift, and go to state 23
     ID     shift, and go to state 24
 
-    $default  reduce using rule 13 (function_body)
+    $default  reduce using rule 12 (function_body)
 
     function_body  go to state 25
     statements     go to state 26
@@ -324,69 +322,68 @@ State 21
 
     6 vars: vars VAR vars ':' • type ';'
 
-    INT   shift, and go to state 30
-    REAL  shift, and go to state 31
+    INT  shift, and go to state 30
 
-    type  go to state 32
+    type  go to state 31
 
 
 State 22
 
-   30 write: WRITE • '(' expression_list ')'
+   29 write: WRITE • '(' expression_list ')'
 
-    '('  shift, and go to state 33
+    '('  shift, and go to state 32
 
 
 State 23
 
-   29 read: READ • '(' expression_list ')'
+   28 read: READ • '(' expression_list ')'
 
-    '('  shift, and go to state 34
+    '('  shift, and go to state 33
 
 
 State 24
 
-   16 statement: ID • ASSIGN expression
+   15 statement: ID • ASSIGN expression
 
-    ASSIGN  shift, and go to state 35
+    ASSIGN  shift, and go to state 34
 
 
 State 25
 
     3 program: PROGRAM ID $@1 '(' program_arguments ')' ';' vars $@2 BEG function_body • END '.' DONE
 
-    END  shift, and go to state 36
+    END  shift, and go to state 35
 
 
 State 26
 
-   12 function_body: statements •
-   14 statements: statements • ';' statement
+   11 function_body: statements •
+   13 statements: statements • ';' statement
 
-    ';'  shift, and go to state 37
+    ';'  shift, and go to state 36
 
-    $default  reduce using rule 12 (function_body)
+    $default  reduce using rule 11 (function_body)
 
 
 State 27
 
-   15 statements: statement •
+   14 statements: statement •
 
-    $default  reduce using rule 15 (statements)
+    $default  reduce using rule 14 (statements)
 
 
 State 28
 
-   17 statement: read •
+   16 statement: read •
 
-    $default  reduce using rule 17 (statement)
+    $default  reduce using rule 16 (statement)
 
 
 State 29
 
-   18 statement: write •
+   17 statement: write •
 
-    $default  reduce using rule 18 (statement)
+    $default  reduce using rule 17 (statement)
 
 
 State 30
@@ -398,304 +395,297 @@ State 30
 
 State 31
 
-    9 type: REAL •
+    6 vars: vars VAR vars ':' type • ';'
 
-    $default  reduce using rule 9 (type)
+    ';'  shift, and go to state 37
 
 
 State 32
 
-    6 vars: vars VAR vars ':' type • ';'
+   29 write: WRITE '(' • expression_list ')'
 
-    ';'  shift, and go to state 38
+    ADDOP  shift, and go to state 38
+    VAL    shift, and go to state 39
+    ID     shift, and go to state 40
+    '('    shift, and go to state 41
+
+    expression       go to state 42
+    term             go to state 43
+    factor           go to state 44
+    expression_list  go to state 45
 
 
 State 33
 
-   30 write: WRITE '(' • expression_list ')'
+   28 read: READ '(' • expression_list ')'
 
-    ADDOP  shift, and go to state 39
-    VAL    shift, and go to state 40
-    ID     shift, and go to state 41
-    '('    shift, and go to state 42
+    ADDOP  shift, and go to state 38
+    VAL    shift, and go to state 39
+    ID     shift, and go to state 40
+    '('    shift, and go to state 41
 
-    expression       go to state 43
-    term             go to state 44
-    factor           go to state 45
+    expression       go to state 42
+    term             go to state 43
+    factor           go to state 44
     expression_list  go to state 46
 
 
 State 34
 
-   29 read: READ '(' • expression_list ')'
+   15 statement: ID ASSIGN • expression
 
-    ADDOP  shift, and go to state 39
-    VAL    shift, and go to state 40
-    ID     shift, and go to state 41
-    '('    shift, and go to state 42
+    ADDOP  shift, and go to state 38
+    VAL    shift, and go to state 39
+    ID     shift, and go to state 40
+    '('    shift, and go to state 41
 
-    expression       go to state 43
-    term             go to state 44
-    factor           go to state 45
-    expression_list  go to state 47
+    expression  go to state 47
+    term        go to state 43
+    factor      go to state 44
 
 
 State 35
 
-   16 statement: ID ASSIGN • expression
+    3 program: PROGRAM ID $@1 '(' program_arguments ')' ';' vars $@2 BEG function_body END • '.' DONE
 
-    ADDOP  shift, and go to state 39
-    VAL    shift, and go to state 40
-    ID     shift, and go to state 41
-    '('    shift, and go to state 42
-
-    expression  go to state 48
-    term        go to state 44
-    factor      go to state 45
+    '.'  shift, and go to state 48
 
 
 State 36
 
-    3 program: PROGRAM ID $@1 '(' program_arguments ')' ';' vars $@2 BEG function_body END • '.' DONE
-
-    '.'  shift, and go to state 49
-
-
-State 37
-
-   14 statements: statements ';' • statement
+   13 statements: statements ';' • statement
 
     WRITE  shift, and go to state 22
     READ   shift, and go to state 23
     ID     shift, and go to state 24
 
-    statement  go to state 50
+    statement  go to state 49
     read       go to state 28
     write      go to state 29
 
 
-State 38
+State 37
 
     6 vars: vars VAR vars ':' type ';' •
 
     $default  reduce using rule 6 (vars)
 
 
+State 38
+
+   19 expression: ADDOP • term
+
+    VAL  shift, and go to state 39
+    ID   shift, and go to state 40
+    '('  shift, and go to state 41
+
+    term    go to state 50
+    factor  go to state 44
+
+
 State 39
 
-   20 expression: ADDOP • term
-
-    VAL  shift, and go to state 40
-    ID   shift, and go to state 41
-    '('  shift, and go to state 42
-
-    term    go to state 51
-    factor  go to state 45
-
-
-State 40
-
-   25 factor: VAL •
-
-    $default  reduce using rule 25 (factor)
-
-
-State 41
-
-   24 factor: ID •
+   24 factor: VAL •
 
     $default  reduce using rule 24 (factor)
 
 
+State 40
+
+   23 factor: ID •
+
+    $default  reduce using rule 23 (factor)
+
+
+State 41
+
+   25 factor: '(' • expression ')'
+
+    ADDOP  shift, and go to state 38
+    VAL    shift, and go to state 39
+    ID     shift, and go to state 40
+    '('    shift, and go to state 41
+
+    expression  go to state 51
+    term        go to state 43
+    factor      go to state 44
+
+
 State 42
 
-   26 factor: '(' • expression ')'
+   20 expression: expression • ADDOP term
+   27 expression_list: expression •
 
-    ADDOP  shift, and go to state 39
-    VAL    shift, and go to state 40
-    ID     shift, and go to state 41
-    '('    shift, and go to state 42
+    ADDOP  shift, and go to state 52
 
-    expression  go to state 52
-    term        go to state 44
-    factor      go to state 45
+    $default  reduce using rule 27 (expression_list)
 
 
 State 43
 
-   21 expression: expression • ADDOP term
-   28 expression_list: expression •
+   18 expression: term •
+   22 term: term • MULOP factor
 
-    ADDOP  shift, and go to state 53
+    MULOP  shift, and go to state 53
 
-    $default  reduce using rule 28 (expression_list)
+    $default  reduce using rule 18 (expression)
 
 
 State 44
 
-   19 expression: term •
-   23 term: term • MULOP factor
+   21 term: factor •
 
-    MULOP  shift, and go to state 54
-
-    $default  reduce using rule 19 (expression)
+    $default  reduce using rule 21 (term)
 
 
 State 45
 
-   22 term: factor •
+   26 expression_list: expression_list • ',' expression
+   29 write: WRITE '(' expression_list • ')'
 
-    $default  reduce using rule 22 (term)
+    ')'  shift, and go to state 54
+    ','  shift, and go to state 55
 
 
 State 46
 
-   27 expression_list: expression_list • ',' expression
-   30 write: WRITE '(' expression_list • ')'
+   26 expression_list: expression_list • ',' expression
+   28 read: READ '(' expression_list • ')'
 
-    ')'  shift, and go to state 55
-    ','  shift, and go to state 56
+    ')'  shift, and go to state 56
+    ','  shift, and go to state 55
 
 
 State 47
 
-   27 expression_list: expression_list • ',' expression
-   29 read: READ '(' expression_list • ')'
+   15 statement: ID ASSIGN expression •
+   20 expression: expression • ADDOP term
 
-    ')'  shift, and go to state 57
-    ','  shift, and go to state 56
+    ADDOP  shift, and go to state 52
+
+    $default  reduce using rule 15 (statement)
 
 
 State 48
 
-   16 statement: ID ASSIGN expression •
-   21 expression: expression • ADDOP term
+    3 program: PROGRAM ID $@1 '(' program_arguments ')' ';' vars $@2 BEG function_body END '.' • DONE
 
-    ADDOP  shift, and go to state 53
-
-    $default  reduce using rule 16 (statement)
+    DONE  shift, and go to state 57
 
 
 State 49
 
-    3 program: PROGRAM ID $@1 '(' program_arguments ')' ';' vars $@2 BEG function_body END '.' • DONE
+   13 statements: statements ';' statement •
 
-    DONE  shift, and go to state 58
+    $default  reduce using rule 13 (statements)
 
 
 State 50
 
-   14 statements: statements ';' statement •
+   19 expression: ADDOP term •
+   22 term: term • MULOP factor
 
-    $default  reduce using rule 14 (statements)
+    MULOP  shift, and go to state 53
+
+    $default  reduce using rule 19 (expression)
 
 
 State 51
 
-   20 expression: ADDOP term •
-   23 term: term • MULOP factor
+   20 expression: expression • ADDOP term
+   25 factor: '(' expression • ')'
 
-    MULOP  shift, and go to state 54
-
-    $default  reduce using rule 20 (expression)
+    ADDOP  shift, and go to state 52
+    ')'    shift, and go to state 58
 
 
 State 52
 
-   21 expression: expression • ADDOP term
-   26 factor: '(' expression • ')'
+   20 expression: expression ADDOP • term
 
-    ADDOP  shift, and go to state 53
-    ')'    shift, and go to state 59
+    VAL  shift, and go to state 39
+    ID   shift, and go to state 40
+    '('  shift, and go to state 41
+
+    term    go to state 59
+    factor  go to state 44
 
 
 State 53
 
-   21 expression: expression ADDOP • term
+   22 term: term MULOP • factor
 
-    VAL  shift, and go to state 40
-    ID   shift, and go to state 41
-    '('  shift, and go to state 42
+    VAL  shift, and go to state 39
+    ID   shift, and go to state 40
+    '('  shift, and go to state 41
 
-    term    go to state 60
-    factor  go to state 45
+    factor  go to state 60
 
 
 State 54
 
-   23 term: term MULOP • factor
+   29 write: WRITE '(' expression_list ')' •
 
-    VAL  shift, and go to state 40
-    ID   shift, and go to state 41
-    '('  shift, and go to state 42
-
-    factor  go to state 61
+    $default  reduce using rule 29 (write)
 
 
 State 55
 
-   30 write: WRITE '(' expression_list ')' •
+   26 expression_list: expression_list ',' • expression
 
-    $default  reduce using rule 30 (write)
+    ADDOP  shift, and go to state 38
+    VAL    shift, and go to state 39
+    ID     shift, and go to state 40
+    '('    shift, and go to state 41
+
+    expression  go to state 61
+    term        go to state 43
+    factor      go to state 44
 
 
 State 56
 
-   27 expression_list: expression_list ',' • expression
+   28 read: READ '(' expression_list ')' •
 
-    ADDOP  shift, and go to state 39
-    VAL    shift, and go to state 40
-    ID     shift, and go to state 41
-    '('    shift, and go to state 42
-
-    expression  go to state 62
-    term        go to state 44
-    factor      go to state 45
+    $default  reduce using rule 28 (read)
 
 
 State 57
-
-   29 read: READ '(' expression_list ')' •
-
-    $default  reduce using rule 29 (read)
-
-
-State 58
 
     3 program: PROGRAM ID $@1 '(' program_arguments ')' ';' vars $@2 BEG function_body END '.' DONE •
 
     $default  reduce using rule 3 (program)
 
 
+State 58
+
+   25 factor: '(' expression ')' •
+
+    $default  reduce using rule 25 (factor)
+
+
 State 59
 
-   26 factor: '(' expression ')' •
+   20 expression: expression ADDOP term •
+   22 term: term • MULOP factor
 
-    $default  reduce using rule 26 (factor)
+    MULOP  shift, and go to state 53
+
+    $default  reduce using rule 20 (expression)
 
 
 State 60
 
-   21 expression: expression ADDOP term •
-   23 term: term • MULOP factor
+   22 term: term MULOP factor •
 
-    MULOP  shift, and go to state 54
-
-    $default  reduce using rule 21 (expression)
+    $default  reduce using rule 22 (term)
 
 
 State 61
 
-   23 term: term MULOP factor •
+   20 expression: expression • ADDOP term
+   26 expression_list: expression_list ',' expression •
 
-    $default  reduce using rule 23 (term)
+    ADDOP  shift, and go to state 52
 
-
-State 62
-
-   21 expression: expression • ADDOP term
-   27 expression_list: expression_list ',' expression •
-
-    ADDOP  shift, and go to state 53
-
-    $default  reduce using rule 27 (expression_list)
+    $default  reduce using rule 26 (expression_list)

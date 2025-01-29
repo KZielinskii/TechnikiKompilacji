@@ -20,7 +20,6 @@ int yylex();
 %token ADDOP
 %token MULOP
 %token INT
-%token REAL
 %token VAL
 %token VAR
 %token ID
@@ -72,8 +71,7 @@ vars:
     ;
 
 type: 
-    INT 
-    | REAL
+    INT
     ;
 
 vars: 
@@ -174,7 +172,7 @@ write:
 %%
 
 bool isType(int type) {
-    if (type != INT && type != REAL) {
+    if (type != INT) {
         yyerror("Nieznany typ");
         return true;
     }

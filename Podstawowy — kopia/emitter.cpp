@@ -7,16 +7,16 @@ std::stringstream outputStream;
 
 std::string addop(int op)
 {
-  if(op == ADD)return "add.";
-  if(op == SUB)return "sub.";
+  if(op == ADD) return "add.";
+  if(op == SUB) return "sub.";
   return "ERROR";
 }
 
 std::string mulop(int op)
 {
-  if(op == MUL)return "mul.";
-  if(op == DIV)return "div.";
-  if(op == MOD)return "mod.";
+  if(op == MUL) return "mul.";
+  if(op == DIV) return "div.";
+  if(op == MOD) return "mod.";
   return "ERROR";
 }
 
@@ -48,50 +48,24 @@ void writeLabel(std::string label)
 
 std::string typeInAsm(int type)
 {
-  return "i";
-}
-
-int intToReal(symbol_t from, symbol_t to)
-{
-  int temp = tempSymbol(REAL);
-  writeCode("intoreal.i\t" + format(from) + "," + format(symtable[temp]) + "\t", "inttoreal.i\t" + from.name + "," + symtable[temp].name);
-  return temp;
-}
-
-int realToInt(symbol_t from, symbol_t to)
-{
-  int temp = tempSymbol(INT);
-  writeCode("realtoint.r\t" + format(from) + "," + format(symtable[temp]) + "\t", "realtoint.r\t" + from.name + "," + symtable[temp].name);
-  return temp;
+  return "i";  // Zamiast r - tylko int
 }
 
 void appendAssign(symbol_t left, symbol_t right)
 {
-  symbol_t new_right = right;
   if (left.type != right.type) {
-    if (left.type == INT && right.type == REAL)
-      new_right = symtable[realToInt(right, left)];
-    else if (left.type == REAL && right.type == INT)
-      new_right = symtable[intToReal(right, left)];
-    else
-      yyerror(("Error typing: " + std::string(token_name(left.type)) + " with " + std::string(token_name(right.type))).c_str());
+    yyerror(("Error typing: " + std::string(token_name(left.type)) + " with " + std::string(token_name(right.type))).c_str());
   }
 
-  writeCode("mov." + typeInAsm(left.type) + "\t\t" + format(new_right) + "," + format(left) + "\t", "mov." + typeInAsm(left.type) + "\t\t" + (new_right.name) + "," + (left.name));
+  writeCode("mov.i\t\t" + format(right) + "," + format(left) + "\t", "mov.i\t\t" + (right.name) + "," + (left.name));
 }
 
 symbol_t willChange(symbol_t left, symbol_t right)
 {
-  symbol_t new_right = right;
   if (left.type != right.type) {
-    if (left.type == INT && right.type == REAL)
-      new_right = symtable[realToInt(right, left)];
-    else if (left.type == REAL && right.type == INT)
-      new_right = symtable[intToReal(right, left)];
-    else
-      yyerror(("Error typing: " + std::string(token_name(left.type)) + " with " + std::string(token_name(right.type))).c_str());
+    yyerror(("Error typing: " + std::string(token_name(left.type)) + " with " + std::string(token_name(right.type))).c_str());
   }
-  return new_right;
+  return right;
 }
 
 int appendAddOP(symbol_t left, int operacja, symbol_t right)
@@ -99,18 +73,17 @@ int appendAddOP(symbol_t left, int operacja, symbol_t right)
   symbol_t new_left = willChange(right, left);
 
   int result = tempSymbol(new_left.type);
-  writeCode(addop(operacja) + typeInAsm(new_left.type) + "\t\t" + format(new_left) + "," + format(right) + "," + format(symtable[result]), addop(operacja) + typeInAsm(new_left.type) + "\t\t" + new_left.name + "," + right.name + "," + (symtable[result].name));
+  writeCode(addop(operacja) + typeInAsm(new_left.type) + "\t\t" + format(new_left) + "," + format(right) + "," + format(symtable[result]) + "\t", addop(operacja) + typeInAsm(new_left.type) + "\t\t" + new_left.name + "," + right.name + "," + (symtable[result].name));
 
   return result;
 }
-
 
 int appendMulOP(symbol_t left, int operacja, symbol_t right)
 {
   symbol_t new_left = willChange(right, left);
 
   int result = tempSymbol(new_left.type);
-  writeCode(mulop(operacja) + typeInAsm(new_left.type) + "\t\t" + format(new_left) + "," + format(right) + "," + format(symtable[result]), mulop(operacja) + typeInAsm(new_left.type) + "\t\t" + new_left.name + "," + right.name + "," + (symtable[result].name));
+  writeCode(mulop(operacja) + typeInAsm(new_left.type) + "\t\t" + format(new_left) + "," + format(right) + "," + format(symtable[result]) + "\t", mulop(operacja) + typeInAsm(new_left.type) + "\t\t" + new_left.name + "," + right.name + "," + (symtable[result].name));
 
   return result;
 }

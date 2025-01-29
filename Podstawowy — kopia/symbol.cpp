@@ -66,8 +66,6 @@ int getSymbolSize(symbol_t symbol)
 {
   if (symbol.token != VAR) return 0;
   if (symbol.type == INT) return 4;
-  if (symbol.type == REAL) return 8;
-
   return 0;
 }
 
