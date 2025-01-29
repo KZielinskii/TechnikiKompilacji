@@ -48,7 +48,7 @@ void writeLabel(std::string label)
 
 std::string typeInAsm(int type)
 {
-  return(type == REAL) ? "r" : "i";
+  return "i";
 }
 
 int intToReal(symbol_t from, symbol_t to)
@@ -99,7 +99,7 @@ int appendAddOP(symbol_t left, int operacja, symbol_t right)
   symbol_t new_left = willChange(right, left);
 
   int result = tempSymbol(new_left.type);
-  writeCode(addop(operacja) + typeInAsm(new_left.type) + "\t\t" + format(new_left) + "," + format(right) + "," + format(symtable[result]) + "\t", addop(operacja) + typeInAsm(new_left.type) + "\t\t" + new_left.name + "," + right.name + "," + (symtable[result].name));
+  writeCode(addop(operacja) + typeInAsm(new_left.type) + "\t\t" + format(new_left) + "," + format(right) + "," + format(symtable[result]), addop(operacja) + typeInAsm(new_left.type) + "\t\t" + new_left.name + "," + right.name + "," + (symtable[result].name));
 
   return result;
 }
@@ -110,7 +110,7 @@ int appendMulOP(symbol_t left, int operacja, symbol_t right)
   symbol_t new_left = willChange(right, left);
 
   int result = tempSymbol(new_left.type);
-  writeCode(mulop(operacja) + typeInAsm(new_left.type) + "\t\t" + format(new_left) + "," + format(right) + "," + format(symtable[result]) + "\t", mulop(operacja) + typeInAsm(new_left.type) + "\t\t" + new_left.name + "," + right.name + "," + (symtable[result].name));
+  writeCode(mulop(operacja) + typeInAsm(new_left.type) + "\t\t" + format(new_left) + "," + format(right) + "," + format(symtable[result]), mulop(operacja) + typeInAsm(new_left.type) + "\t\t" + new_left.name + "," + right.name + "," + (symtable[result].name));
 
   return result;
 }
