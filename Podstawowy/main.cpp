@@ -11,7 +11,6 @@ int main(int argc, char **argv)
 
   if (errorno == 0)
   {
-    cout << "Tabela symboli: " << endl;
     printSymtable();
     string outFileName = "Program.asm";
 

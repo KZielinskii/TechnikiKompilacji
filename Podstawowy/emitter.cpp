@@ -53,14 +53,14 @@ std::string typeInAsm(int type)
 
 int intToReal(symbol_t from, symbol_t to)
 {
-  int temp = newTemp(REAL);
+  int temp = tempSymbol(REAL);
   writeCode("intoreal.i\t" + format(from) + "," + format(symtable[temp]) + "\t", "inttoreal.i\t" + from.name + "," + symtable[temp].name);
   return temp;
 }
 
 int realToInt(symbol_t from, symbol_t to)
 {
-  int temp = newTemp(INT);
+  int temp = tempSymbol(INT);
   writeCode("realtoint.r\t" + format(from) + "," + format(symtable[temp]) + "\t", "realtoint.r\t" + from.name + "," + symtable[temp].name);
   return temp;
 }
@@ -98,8 +98,8 @@ int appendAddOP(symbol_t left, int operacja, symbol_t right)
 {
   symbol_t new_left = willChange(right, left);
 
-  int result = newTemp(new_left.type);
-  writeCode(addop(operacja) + typeInAsm(new_left.type) + "\t\t" + format(new_left) + "," + format(right) + "," + format(symtable[result]), addop(operacja) + typeInAsm(new_left.type) + "\t" + new_left.name + "," + right.name + "," + (symtable[result].name));
+  int result = tempSymbol(new_left.type);
+  writeCode(addop(operacja) + typeInAsm(new_left.type) + "\t\t" + format(new_left) + "," + format(right) + "," + format(symtable[result]), addop(operacja) + typeInAsm(new_left.type) + "\t\t" + new_left.name + "," + right.name + "," + (symtable[result].name));
 
   return result;
 }
@@ -109,8 +109,8 @@ int appendMulOP(symbol_t left, int operacja, symbol_t right)
 {
   symbol_t new_left = willChange(right, left);
 
-  int result = newTemp(new_left.type);
-  writeCode(mulop(operacja) + typeInAsm(new_left.type) + "\t\t" + format(new_left) + "," + format(right) + "," + format(symtable[result]), mulop(operacja) + typeInAsm(new_left.type) + "\t" + new_left.name + "," + right.name + "," + (symtable[result].name));
+  int result = tempSymbol(new_left.type);
+  writeCode(mulop(operacja) + typeInAsm(new_left.type) + "\t\t" + format(new_left) + "," + format(right) + "," + format(symtable[result]), mulop(operacja) + typeInAsm(new_left.type) + "\t\t" + new_left.name + "," + right.name + "," + (symtable[result].name));
 
   return result;
 }

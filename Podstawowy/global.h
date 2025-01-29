@@ -19,7 +19,7 @@ int lookup(std::string name);
 
 void initSymtable();
 int getAddress(std::string name);
-int newTemp(int);
+int tempSymbol(int);
 int newNum(std::string, int);
 int yyparse();
 void yyerror(char const *);
