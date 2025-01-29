@@ -30,6 +30,7 @@ int yylex();
 %token PROC
 
 %%
+
 program: 
     PROGRAM ID 
     {
@@ -42,22 +43,24 @@ program:
         writeLabel("program");
     }
     BEG function_body END
-    '.' DONE {
-        writeCode("exit\t\t","exit");
+    '.' DONE
+    {
+        writeCode("exit\t\t", "exit");
         return 0;
-    };
+    }
     ;
 
 program_arguments: 
     ID 
-    | program_arguments ',' ID;
+    | program_arguments ',' ID
+    ;
 
 vars:
     vars VAR vars ':' type ';'
     {
-        if(isType($5)) YYERROR;
+        if (isType($5)) YYERROR;
 
-        for(auto &symTabIdx : listID) {
+        for (auto &symTabIdx : listID) {
             symbol_t* sym = &symtable[symTabIdx];
             sym->type = $5;       
             sym->token = VAR;
@@ -65,18 +68,24 @@ vars:
         }
         listID.clear();
     }
-    | //empty
+    | 
     ;
 
-type:
-    INT | REAL;
-
-
-vars:
-    ID {listID.push_back($1);}
-    | vars ',' ID {listID.push_back($3);}
+type: 
+    INT 
+    | REAL
     ;
 
+vars: 
+    ID 
+    {
+        listID.push_back($1);
+    }
+    | vars ',' ID
+    {
+        listID.push_back($3);
+    }
+    ;
 
 function_body:
     stmts 
@@ -84,18 +93,20 @@ function_body:
     ;
 
 stmts:
-    stmts ';' stmt | stmt ;
+    stmts ';' stmt 
+    | stmt 
+    ;
 
 stmt:
     ID ASSIGN expression
-        {
-            appendAssign(symtable[$1], symtable[$3]);
-        }
+    {
+        appendAssign(symtable[$1], symtable[$3]);
+    }
     | read
     | write
     ;
 
-expression:
+expression: 
     term 
     | ADDOP term
     {
@@ -112,9 +123,7 @@ expression:
     }
     ;
 
-
-
-term:
+term: 
     factor 
     | term MULOP factor
     {
@@ -122,18 +131,17 @@ term:
     }
     ;
 
-factor:
+factor: 
     ID 
     | VAL 
     | '(' expression ')'
-        {
-            $$ = $2;
-        }
+    {
+        $$ = $2;
+    }
     ;
 
- 
 expression_list:
-    expression_list ',' expression 
+    expression_list ',' expression
     {
         listID.push_back($3);
     }
@@ -141,43 +149,43 @@ expression_list:
     {
         listID.push_back($1);
     }
-    ;                                                                                                          
+    ;
 
 read:
-    READ '(' expression_list ')' 
+    READ '(' expression_list ')'
     {
         for (auto id : listID) {
             appendRead(symtable[id]);
         }
         listID.clear();
     }
+    ;
 
 write:
-    WRITE '(' expression_list ')' 
+    WRITE '(' expression_list ')'
     {
         for (auto id : listID) {
             appendWrite(symtable[id]);
         }
         listID.clear();
     }
+    ;
+
 %%
 
-
 bool isType(int type) {
-    if(type != INT && type != REAL) {
+    if (type != INT && type != REAL) {
         yyerror("Nieznany typ");
         return true;
     }
     return false;
 }
 
-void yyerror(char const *s){
-  printf("\n\nBłąd \"%s\" w linii %d\n",s, lineno);
-  errorno++;
-};
+void yyerror(char const *s) {
+    printf("\n\nBłąd \"%s\" w linii %d\n", s, lineno);
+    errorno++;
+}
 
-
-const char *token_name(int token)
-{
-  return yytname[YYTRANSLATE(token)];
+const char *token_name(int token) {
+    return yytname[YYTRANSLATE(token)];
 }
