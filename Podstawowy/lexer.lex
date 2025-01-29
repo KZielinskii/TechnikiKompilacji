@@ -13,13 +13,12 @@ real        {integer}{fraction}?
 id          {letter}({letter}|{integer})*
 
 assign      ":="
-addop       "-" | "+"
-mulop       "*" | "/" | "mul" | "div" | "mod" | "and"
+addop       "-"|"+"
+mulop       "*"|"/"|"mul"|"div"|"mod"|"and"
 
 %%
-[ \t]       {}
-
 \n          lineno++;
+[ \t]       {}
 
 program     {return PROGRAM;}
 begin       {return BEG;}
