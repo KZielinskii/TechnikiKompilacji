@@ -56,7 +56,7 @@ program_arguments:
     ;
 
 vars:
-    vars VAR vars ':' type ';'
+    vars VAR var_list ':' type ';'
     {
         if (isType($5)) YYERROR;
 
@@ -71,21 +71,23 @@ vars:
     | 
     ;
 
+var_list: 
+    ID 
+    {
+        listID.push_back($1);
+    }
+    | var_list ',' ID
+    {
+        listID.push_back($3);
+    }
+    ;
+
+
 type: 
     INT 
     | REAL
     ;
 
-vars: 
-    ID 
-    {
-        listID.push_back($1);
-    }
-    | vars ',' ID
-    {
-        listID.push_back($3);
-    }
-    ;
 
 function_body:
     statements 
