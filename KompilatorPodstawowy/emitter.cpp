@@ -77,7 +77,7 @@ void emit(std::string op, int src1, int src2, int dest) {
 void saveAsmCode(std::string filename) {
     std::ofstream outFile(filename);
     
-    outFile << "jump.i #lab0\n";
+    outFile << "jump.i #lab0\t ;jump.i  lab0\n";
     outFile << "lab0:\n";
 
     for (const auto& line : asmCode) {
