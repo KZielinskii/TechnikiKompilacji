@@ -55,21 +55,21 @@ extern int yydebug;
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
     PROGRAM = 258,                 /* PROGRAM  */
-    BEG = 259,                     /* BEG  */
-    END = 260,                     /* END  */
-    WRITE = 261,                   /* WRITE  */
-    READ = 262,                    /* READ  */
-    ASSIGN = 263,                  /* ASSIGN  */
-    ADDOP = 264,                   /* ADDOP  */
-    MULOP = 265,                   /* MULOP  */
-    INT = 266,                     /* INT  */
-    VAL = 267,                     /* VAL  */
-    VAR = 268,                     /* VAR  */
-    ID = 269,                      /* ID  */
-    LABEL = 270,                   /* LABEL  */
-    NONE = 271,                    /* NONE  */
-    DONE = 272,                    /* DONE  */
-    PROC = 273                     /* PROC  */
+    ID = 259,                      /* ID  */
+    INT = 260,                     /* INT  */
+    VAR = 261,                     /* VAR  */
+    VAL = 262,                     /* VAL  */
+    LABEL = 263,                   /* LABEL  */
+    PROC = 264,                    /* PROC  */
+    NONE = 265,                    /* NONE  */
+    BEG = 266,                     /* BEG  */
+    END = 267,                     /* END  */
+    ASSIGN = 268,                  /* ASSIGN  */
+    ADDOP = 269,                   /* ADDOP  */
+    MULOP = 270,                   /* MULOP  */
+    NUM = 271,                     /* NUM  */
+    WRITE = 272,                   /* WRITE  */
+    READ = 273                     /* READ  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif

@@ -877,21 +877,19 @@ YY_RULE_SETUP
 #line 37 "lexer.lex"
 {yylval = insert(yytext, ID, NONE); return ID;}
 	YY_BREAK
-case YY_STATE_EOF(INITIAL):
-#line 38 "lexer.lex"
-{return DONE;}
-	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 39 "lexer.lex"
+#line 38 "lexer.lex"
 {return *yytext;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 40 "lexer.lex"
+#line 39 "lexer.lex"
 ECHO;
 	YY_BREAK
-#line 895 "lexer.cpp"
+#line 891 "lexer.cpp"
+case YY_STATE_EOF(INITIAL):
+	yyterminate();
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1906,6 +1904,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 40 "lexer.lex"
+#line 39 "lexer.lex"
 
 

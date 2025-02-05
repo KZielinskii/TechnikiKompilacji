@@ -19,66 +19,23 @@ void initSymtable()
   symtable.push_back(write);
 }
 
-int lookup(const std::string name)
-{
-  for (int p = symtable.size() - 1; p > 0; p--) {
-    if (symtable[p].name == name) return p;
-  }
-  return -1;
-}
-
-int insertSymbol(symbol_t symbol)
-{
-  symtable.push_back(symbol);
-  return symtable.size() - 1;
-}
-
-int insert(std::string name, int token, int type)
-{
-  int look = lookup(name);
-  if (look >= 0) return look;
-  symbol_t symbol;
-  symbol.name = name;
-  symbol.token = token;
-  symbol.type = type;
-  return insertSymbol(symbol);
-}
-
-int tempSymbol(int type)
-{
-  symbol_t t;
-  t.name = "$t" + std::to_string(tempCount);
-  t.type = type;
-  t.token = VAR;
-  t.address = 0;
-  int index = insertSymbol(t);
-  symtable[index].address = getAddress(t.name);
-  tempCount++;
-  return index;
-}
-
-int newNum(std::string name, int type)
-{
-  return insert(name, VAL, type);
-}
-
-int getSymbolSize(symbol_t symbol)
-{
-  if (symbol.token != VAR) return 0;
-  if (symbol.type == INT) return 4;
-  return 0;
-}
-
-int getAddress(std::string name)
-{
-  int address = 0;
-  for (auto symbol : symtable) {
-    if (symbol.name != name) {
-      address += getSymbolSize(symbol);
+int insert(std::string name, int token, int type) {
+    for (size_t i = 0; i < symtable.size(); i++) {
+        if (symtable[i].name == name) {
+            return i;  // Symbol już istnieje, zwracamy jego indeks
+        }
     }
-  }
-  return address;
+
+    symbol_t newSymbol;
+    newSymbol.name = name;
+    newSymbol.token = token;
+    newSymbol.type = type;
+    newSymbol.address = symtable.size() * 4;  // Przykładowe przypisanie adresu
+
+    symtable.push_back(newSymbol);
+    return symtable.size() - 1;  // Zwracamy indeks nowego symbolu
 }
+
 
 void printSymtable()
 {

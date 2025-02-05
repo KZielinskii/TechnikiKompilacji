@@ -35,6 +35,5 @@ integer     {yylval = INT; return INT;}
 
 {integer}   {yylval = insert(yytext, VAL, INT); return VAL;}
 {id}        {yylval = insert(yytext, ID, NONE); return ID;}
-<<EOF>>     {return DONE;}
 .           {return *yytext;}
 %%
