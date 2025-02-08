@@ -13,8 +13,6 @@ int main(int argc, char **argv)
   {
     printSymtable();
     string outFileName = "Program.asm";
-
-    cout << endl << "Kod w assemblerze: " << endl;
     saveAsmCode(outFileName);
   }
   else
