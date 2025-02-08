@@ -1,6 +1,7 @@
 #include "global.h"
 
 std::vector<symbol_t> symtable;
+int coutTemp = 0;
 
 void initSymtable()
 {
@@ -29,10 +30,22 @@ int insert(std::string name, int token, int type) {
     newSymbol.name = name;
     newSymbol.token = token;
     newSymbol.type = type;
-    newSymbol.address = tempCountAddress;
+    newSymbol.address = 0;
 
     symtable.push_back(newSymbol);
     return symtable.size() - 1;  // Zwracamy indeks nowego symbolu
+}
+
+int newTemp(int type, int address) {
+    symbol_t newSymbol;
+    newSymbol.name = "t"+ std::to_string(coutTemp);
+    newSymbol.token = VAR;
+    newSymbol.type = type;
+    newSymbol.address = address;
+    coutTemp++;
+
+    symtable.push_back(newSymbol);
+    return symtable.size() - 1;
 }
 
 

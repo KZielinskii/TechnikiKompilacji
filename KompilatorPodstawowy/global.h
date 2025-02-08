@@ -16,6 +16,7 @@ extern int tempCountAddress;
 int yylex_destroy();
 
 int insert(std::string name, int token, int type);
+int newTemp(int type, int address);
 
 void initSymtable();
 void printSymtable();

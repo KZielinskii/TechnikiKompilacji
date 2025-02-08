@@ -870,7 +870,7 @@ YY_RULE_SETUP
 case 13:
 YY_RULE_SETUP
 #line 36 "lexer.lex"
-{yylval = insert(yytext, VAL, INT); return VAL;}
+{yylval = insert(yytext, NUM, INT); return NUM;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP

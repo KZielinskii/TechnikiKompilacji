@@ -58,7 +58,7 @@ extern int yydebug;
     ID = 259,                      /* ID  */
     INT = 260,                     /* INT  */
     VAR = 261,                     /* VAR  */
-    VAL = 262,                     /* VAL  */
+    NUM = 262,                     /* NUM  */
     LABEL = 263,                   /* LABEL  */
     PROC = 264,                    /* PROC  */
     NONE = 265,                    /* NONE  */
@@ -67,9 +67,8 @@ extern int yydebug;
     ASSIGN = 268,                  /* ASSIGN  */
     ADDOP = 269,                   /* ADDOP  */
     MULOP = 270,                   /* MULOP  */
-    NUM = 271,                     /* NUM  */
-    WRITE = 272,                   /* WRITE  */
-    READ = 273                     /* READ  */
+    WRITE = 271,                   /* WRITE  */
+    READ = 272                     /* READ  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif

@@ -10,7 +10,7 @@ int yylex();
 void yyerror(const char* s);
 %}
 
-%token PROGRAM ID INT VAR VAL LABEL PROC NONE BEG END ASSIGN ADDOP MULOP NUM WRITE READ
+%token PROGRAM ID INT VAR NUM LABEL PROC NONE BEG END ASSIGN ADDOP MULOP WRITE READ
 
 %%
 
@@ -52,10 +52,10 @@ statement_list:
 
 statement:
     variable ASSIGN expression { 
-        emit_mov("mov.i", symtable[$3].address, symtable[$1].address);
+        emit_mov("mov.i", $3, $1);
     }
     | WRITE '(' variable ')' { 
-        emit_write("write.i", symtable[$3].address);
+        emit_write("write.i", $3);
     }
     ;
 
@@ -70,9 +70,12 @@ expression:
 simple_expression:
     term { $$ = $1; }
     | simple_expression ADDOP term { 
-        emit_op("add.i", symtable[$1].address, symtable[$3].address, tempCountAddress);
+        if ($2 == ADD)
+            emit_op("add.i", $1, $3, tempCountAddress);
+        else if ($2 == SUB)
+            emit_op("sub.i", $1, $3, tempCountAddress);
         $$ = tempCountAddress;
-        tempCountAddress+=4;
+        tempCountAddress += 4;
     }
     ;
 
@@ -80,18 +83,18 @@ term:
     factor { $$ = $1; }
     | term MULOP factor {
         if ($2 == MUL)
-            emit_op("mul.i", symtable[$1].address, symtable[$3].address, tempCountAddress);
+            emit_op("mul.i", $1, $3, tempCountAddress);
         else if ($2 == DIV)
-            emit_op("div.i", symtable[$1].address, symtable[$3].address, tempCountAddress);
+            emit_op("div.i", $1, $3, tempCountAddress);
         else if ($2 == MOD)
-            emit_op("mod.i", symtable[$1].address, symtable[$3].address, tempCountAddress);
+            emit_op("mod.i", $1, $3, tempCountAddress);
         $$ = tempCountAddress;
-        tempCountAddress+=4;
+        tempCountAddress += 4;
     }
 
 factor:
-    variable
-    | VAL { $$ = $1; }
+    variable { $$ = symtable[$1].address; }  // ID pobiera adres z tablicy symboli
+    | NUM { $$ = $1; }  // NUM to wartość, nie adres w tablicy symboli
     | '(' expression ')'
     ;
 

@@ -33,7 +33,7 @@ integer     {yylval = INT; return INT;}
 {addop}     {yylval = getOperationToken(yytext); return ADDOP;}
 {mulop}     {yylval = getOperationToken(yytext); return MULOP;}
 
-{integer}   {yylval = insert(yytext, VAL, INT); return VAL;}
+{integer}   {yylval = insert(yytext, NUM, INT); return NUM;}
 {id}        {yylval = insert(yytext, ID, NONE); return ID;}
 .           {return *yytext;}
 %%

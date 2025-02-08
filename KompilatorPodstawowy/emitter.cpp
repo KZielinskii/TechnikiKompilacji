@@ -6,37 +6,37 @@
 std::vector<std::string> asmCode;
 
 std::string machineOperand(int op) {    
-    for (const auto &sym : symtable) {
-        if (sym.address == op && sym.token == VAL) {
-            return "#" + sym.name;
-        }
-        if (sym.address == op && sym.token == VAR && sym.type == INT) {
-            return std::to_string(sym.address);
-        }
+    symbol_t sym = symtable.at(op);
+    
+    if(sym.token==NUM) {
+        return ("#" + sym.name);
+    }
+    if(sym.token==VAR) {
+        return std::to_string(sym.address);
+    }
+    return std::to_string(-1);
+}
+
+
+std::string symbolicOperand(int op) {
+    symbol_t sym = symtable.at(op);
+    if(sym.token==NUM) {
+        return sym.name;
+    }
+    if(sym.token==VAR) {
+        return sym.name;
     }
     
     return std::to_string(-1);
 }
 
 
-std::string symbolicOperand(int op) {
-    
-    for (const auto &sym : symtable) {
-        if (sym.address == op && sym.token == VAL)
-            return sym.name;
-        if (sym.address == op && sym.token == ID && sym.type == INT)
-            return sym.name;
-    }
-    
-    return "$t" + std::to_string(-1);
-}
 
-
-
-void emit_mov(std::string op, int address1, int address2) {
+void emit_mov(std::string op, int index1, int index2) {
     std::ostringstream oss;
-    oss << "\t" << op << "\t" << machineOperand(address1) << "," << machineOperand(address2);
-    oss << "\t ; " << op << " " << symbolicOperand(address1) << "," << symbolicOperand(address2);
+    
+    oss << "\t" << op << "\t" << machineOperand(index1) << "," << machineOperand(index2);
+    oss << "\t ; " << op << " " << symbolicOperand(index1) << "," << symbolicOperand(index2);
     asmCode.push_back(oss.str());
 }
 
@@ -48,10 +48,11 @@ void emit_write(std::string op, int address) {
 }
 
 void emit_op(std::string op, int address1, int address2, int address3) {
-    std::ostringstream oss;
+    newTemp(INT, address3);
+   /* std::ostringstream oss;
     oss << "\t" << op << "\t" << machineOperand(address1) << "," << machineOperand(address2) << "," << machineOperand(address3);
     oss << "\t ; " << op << " " << symbolicOperand(address1) << "," << symbolicOperand(address2) << "," << symbolicOperand(address3);
-    asmCode.push_back(oss.str());
+    asmCode.push_back(oss.str());*/
 }
 
 
@@ -66,7 +67,7 @@ void saveAsmCode(std::string filename) {
         outFile << line << "\n";
     }
 
-    outFile << "\texit\n";
+    outFile << "\texit\t;exit\n";
 
     outFile.close();
 }
