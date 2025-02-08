@@ -11,6 +11,7 @@ extern std::vector<symbol_t> symtable;
 
 extern int lineno;
 extern int errorno;
+extern int tempCountAddress;
 
 int yylex_destroy();
 
@@ -22,7 +23,6 @@ void saveAsmCode(std::string);
 int getOperationToken(std::string);
 const char *token_name(int);
 
-int getTemp();
-void emit(std::string op, int src, int dest);
-void emit(std::string op, int dest);
-void emit(std::string op, int src1, int src2, int dest);
+void emit_mov(std::string op, int src, int dest);
+void emit_write(std::string op, int dest);
+void emit_op(std::string op, int src1, int src2, int dest);

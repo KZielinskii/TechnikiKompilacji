@@ -9,11 +9,3 @@ begin
 end.
 
 
-
-program example(input, output);
-var a, b: integer;
-begin
-  a := 1;
-  b := a + 1;
-  write(b)
-end.

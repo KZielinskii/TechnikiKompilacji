@@ -15,9 +15,13 @@ void yyerror(const char* s);
 %%
 
 program:
-    PROGRAM ID '(' identifier_list ')' ';'
+    PROGRAM ID '(' program_arguments ')' ';'
     declarations compound_statement '.'
     ;
+
+program_arguments:
+    ID 
+    | program_arguments ',' ID;
 
 identifier_list:
     ID { listID.push_back($1); }
@@ -28,8 +32,9 @@ declarations:
     declarations VAR identifier_list ':' INT ';' { 
         for (int id : listID) {
             symtable[id].type = INT;
-            symtable[id].address = tempCountAddress;  // Przypisanie adresu w pamięci
-            tempCountAddress += 4;  // Przesunięcie adresu (np. o 4 bajty dla int)
+            symtable[id].token = VAR;
+            symtable[id].address = tempCountAddress;
+            tempCountAddress += 4;
         }
         listID.clear();
     }
@@ -47,10 +52,10 @@ statement_list:
 
 statement:
     variable ASSIGN expression { 
-        emit("mov.i", $3, symtable[$1].address);
+        emit_mov("mov.i", symtable[$3].address, symtable[$1].address);
     }
     | WRITE '(' variable ')' { 
-        emit("write.i", symtable[$3].address);
+        emit_write("write.i", symtable[$3].address);
     }
     ;
 
@@ -65,23 +70,23 @@ expression:
 simple_expression:
     term { $$ = $1; }
     | simple_expression ADDOP term { 
-        int temp = getTemp();
-        emit("add.i", symtable[$1].address, symtable[$3].address, temp);
-        $$ = temp;
+        emit_op("add.i", symtable[$1].address, symtable[$3].address, tempCountAddress);
+        $$ = tempCountAddress;
+        tempCountAddress+=4;
     }
     ;
 
 term:
     factor { $$ = $1; }
     | term MULOP factor {
-        int temp = getTemp();
         if ($2 == MUL)
-            emit("mul.i", symtable[$1].address, symtable[$3].address, temp);
+            emit_op("mul.i", symtable[$1].address, symtable[$3].address, tempCountAddress);
         else if ($2 == DIV)
-            emit("div.i", symtable[$1].address, symtable[$3].address, temp);
+            emit_op("div.i", symtable[$1].address, symtable[$3].address, tempCountAddress);
         else if ($2 == MOD)
-            emit("mod.i", symtable[$1].address, symtable[$3].address, temp);
-        $$ = temp;
+            emit_op("mod.i", symtable[$1].address, symtable[$3].address, tempCountAddress);
+        $$ = tempCountAddress;
+        tempCountAddress+=4;
     }
 
 factor:

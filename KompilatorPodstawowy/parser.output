@@ -11,62 +11,65 @@ Grammar
 
     0 $accept: program $end
 
-    1 program: PROGRAM ID '(' identifier_list ')' ';' declarations compound_statement '.'
+    1 program: PROGRAM ID '(' program_arguments ')' ';' declarations compound_statement '.'
 
-    2 identifier_list: ID
-    3                | identifier_list ',' ID
+    2 program_arguments: ID
+    3                  | program_arguments ',' ID
 
-    4 declarations: declarations VAR identifier_list ':' INT ';'
-    5             | ε
+    4 identifier_list: ID
+    5                | identifier_list ',' ID
 
-    6 compound_statement: BEG statement_list END
+    6 declarations: declarations VAR identifier_list ':' INT ';'
+    7             | ε
 
-    7 statement_list: statement
-    8               | statement_list ';' statement
+    8 compound_statement: BEG statement_list END
 
-    9 statement: variable ASSIGN expression
-   10          | WRITE '(' variable ')'
+    9 statement_list: statement
+   10               | statement_list ';' statement
 
-   11 variable: ID
+   11 statement: variable ASSIGN expression
+   12          | WRITE '(' variable ')'
 
-   12 expression: simple_expression
+   13 variable: ID
 
-   13 simple_expression: term
-   14                  | simple_expression ADDOP term
+   14 expression: simple_expression
 
-   15 term: factor
-   16     | term MULOP factor
+   15 simple_expression: term
+   16                  | simple_expression ADDOP term
 
-   17 factor: variable
-   18       | VAL
-   19       | '(' expression ')'
+   17 term: factor
+   18     | term MULOP factor
+
+   19 factor: variable
+   20       | VAL
+   21       | '(' expression ')'
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
-    '(' (40) 1 10 19
-    ')' (41) 1 10 19
-    ',' (44) 3
+    '(' (40) 1 12 21
+    ')' (41) 1 12 21
+    ',' (44) 3 5
     '.' (46) 1
-    ':' (58) 4
-    ';' (59) 1 4 8
+    ':' (58) 6
+    ';' (59) 1 6 10
     error (256)
     PROGRAM (258) 1
-    ID (259) 1 2 3 11
-    INT (260) 4
-    VAR (261) 4
-    VAL (262) 18
+    ID (259) 1 2 3 4 5 13
+    INT (260) 6
+    VAR (261) 6
+    VAL (262) 20
     LABEL (263)
     PROC (264)
     NONE (265)
-    BEG (266) 6
-    END (267) 6
-    ASSIGN (268) 9
-    ADDOP (269) 14
-    MULOP (270) 16
+    BEG (266) 8
+    END (267) 8
+    ASSIGN (268) 11
+    ADDOP (269) 16
+    MULOP (270) 18
     NUM (271)
-    WRITE (272) 10
+    WRITE (272) 12
     READ (273)
 
 
@@ -77,36 +80,39 @@ Nonterminals, with rules where they appear
     program (26)
         on left: 1
         on right: 0
-    identifier_list (27)
+    program_arguments (27)
         on left: 2 3
-        on right: 1 3 4
-    declarations (28)
+        on right: 1 3
+    identifier_list (28)
         on left: 4 5
-        on right: 1 4
-    compound_statement (29)
-        on left: 6
+        on right: 5 6
+    declarations (29)
+        on left: 6 7
+        on right: 1 6
+    compound_statement (30)
+        on left: 8
         on right: 1
-    statement_list (30)
-        on left: 7 8
-        on right: 6 8
-    statement (31)
+    statement_list (31)
         on left: 9 10
-        on right: 7 8
-    variable (32)
-        on left: 11
-        on right: 9 10 17
-    expression (33)
-        on left: 12
-        on right: 9 19
-    simple_expression (34)
-        on left: 13 14
-        on right: 12 14
-    term (35)
+        on right: 8 10
+    statement (32)
+        on left: 11 12
+        on right: 9 10
+    variable (33)
+        on left: 13
+        on right: 11 12 19
+    expression (34)
+        on left: 14
+        on right: 11 21
+    simple_expression (35)
         on left: 15 16
-        on right: 13 14 16
-    factor (36)
-        on left: 17 18 19
-        on right: 15 16
+        on right: 14 16
+    term (36)
+        on left: 17 18
+        on right: 15 16 18
+    factor (37)
+        on left: 19 20 21
+        on right: 17 18
 
 
 State 0
@@ -120,7 +126,7 @@ State 0
 
 State 1
 
-    1 program: PROGRAM • ID '(' identifier_list ')' ';' declarations compound_statement '.'
+    1 program: PROGRAM • ID '(' program_arguments ')' ';' declarations compound_statement '.'
 
     ID  shift, and go to state 3
 
@@ -134,7 +140,7 @@ State 2
 
 State 3
 
-    1 program: PROGRAM ID • '(' identifier_list ')' ';' declarations compound_statement '.'
+    1 program: PROGRAM ID • '(' program_arguments ')' ';' declarations compound_statement '.'
 
     '('  shift, and go to state 5
 
@@ -148,24 +154,24 @@ State 4
 
 State 5
 
-    1 program: PROGRAM ID '(' • identifier_list ')' ';' declarations compound_statement '.'
+    1 program: PROGRAM ID '(' • program_arguments ')' ';' declarations compound_statement '.'
 
     ID  shift, and go to state 6
 
-    identifier_list  go to state 7
+    program_arguments  go to state 7
 
 
 State 6
 
-    2 identifier_list: ID •
+    2 program_arguments: ID •
 
-    $default  reduce using rule 2 (identifier_list)
+    $default  reduce using rule 2 (program_arguments)
 
 
 State 7
 
-    1 program: PROGRAM ID '(' identifier_list • ')' ';' declarations compound_statement '.'
-    3 identifier_list: identifier_list • ',' ID
+    1 program: PROGRAM ID '(' program_arguments • ')' ';' declarations compound_statement '.'
+    3 program_arguments: program_arguments • ',' ID
 
     ')'  shift, and go to state 8
     ','  shift, and go to state 9
@@ -173,38 +179,38 @@ State 7
 
 State 8
 
-    1 program: PROGRAM ID '(' identifier_list ')' • ';' declarations compound_statement '.'
+    1 program: PROGRAM ID '(' program_arguments ')' • ';' declarations compound_statement '.'
 
     ';'  shift, and go to state 10
 
 
 State 9
 
-    3 identifier_list: identifier_list ',' • ID
+    3 program_arguments: program_arguments ',' • ID
 
     ID  shift, and go to state 11
 
 
 State 10
 
-    1 program: PROGRAM ID '(' identifier_list ')' ';' • declarations compound_statement '.'
+    1 program: PROGRAM ID '(' program_arguments ')' ';' • declarations compound_statement '.'
 
-    $default  reduce using rule 5 (declarations)
+    $default  reduce using rule 7 (declarations)
 
     declarations  go to state 12
 
 
 State 11
 
-    3 identifier_list: identifier_list ',' ID •
+    3 program_arguments: program_arguments ',' ID •
 
-    $default  reduce using rule 3 (identifier_list)
+    $default  reduce using rule 3 (program_arguments)
 
 
 State 12
 
-    1 program: PROGRAM ID '(' identifier_list ')' ';' declarations • compound_statement '.'
-    4 declarations: declarations • VAR identifier_list ':' INT ';'
+    1 program: PROGRAM ID '(' program_arguments ')' ';' declarations • compound_statement '.'
+    6 declarations: declarations • VAR identifier_list ':' INT ';'
 
     VAR  shift, and go to state 13
     BEG  shift, and go to state 14
@@ -214,283 +220,304 @@ State 12
 
 State 13
 
-    4 declarations: declarations VAR • identifier_list ':' INT ';'
+    6 declarations: declarations VAR • identifier_list ':' INT ';'
 
-    ID  shift, and go to state 6
+    ID  shift, and go to state 16
 
-    identifier_list  go to state 16
+    identifier_list  go to state 17
 
 
 State 14
 
-    6 compound_statement: BEG • statement_list END
+    8 compound_statement: BEG • statement_list END
 
-    ID     shift, and go to state 17
-    WRITE  shift, and go to state 18
+    ID     shift, and go to state 18
+    WRITE  shift, and go to state 19
 
-    statement_list  go to state 19
-    statement       go to state 20
-    variable        go to state 21
+    statement_list  go to state 20
+    statement       go to state 21
+    variable        go to state 22
 
 
 State 15
 
-    1 program: PROGRAM ID '(' identifier_list ')' ';' declarations compound_statement • '.'
+    1 program: PROGRAM ID '(' program_arguments ')' ';' declarations compound_statement • '.'
 
-    '.'  shift, and go to state 22
+    '.'  shift, and go to state 23
 
 
 State 16
 
-    3 identifier_list: identifier_list • ',' ID
-    4 declarations: declarations VAR identifier_list • ':' INT ';'
+    4 identifier_list: ID •
 
-    ','  shift, and go to state 9
-    ':'  shift, and go to state 23
+    $default  reduce using rule 4 (identifier_list)
 
 
 State 17
 
-   11 variable: ID •
+    5 identifier_list: identifier_list • ',' ID
+    6 declarations: declarations VAR identifier_list • ':' INT ';'
 
-    $default  reduce using rule 11 (variable)
+    ','  shift, and go to state 24
+    ':'  shift, and go to state 25
 
 
 State 18
 
-   10 statement: WRITE • '(' variable ')'
+   13 variable: ID •
 
-    '('  shift, and go to state 24
+    $default  reduce using rule 13 (variable)
 
 
 State 19
 
-    6 compound_statement: BEG statement_list • END
-    8 statement_list: statement_list • ';' statement
+   12 statement: WRITE • '(' variable ')'
 
-    END  shift, and go to state 25
-    ';'  shift, and go to state 26
+    '('  shift, and go to state 26
 
 
 State 20
 
-    7 statement_list: statement •
+    8 compound_statement: BEG statement_list • END
+   10 statement_list: statement_list • ';' statement
 
-    $default  reduce using rule 7 (statement_list)
+    END  shift, and go to state 27
+    ';'  shift, and go to state 28
 
 
 State 21
 
-    9 statement: variable • ASSIGN expression
+    9 statement_list: statement •
 
-    ASSIGN  shift, and go to state 27
+    $default  reduce using rule 9 (statement_list)
 
 
 State 22
 
-    1 program: PROGRAM ID '(' identifier_list ')' ';' declarations compound_statement '.' •
+   11 statement: variable • ASSIGN expression
 
-    $default  reduce using rule 1 (program)
+    ASSIGN  shift, and go to state 29
 
 
 State 23
 
-    4 declarations: declarations VAR identifier_list ':' • INT ';'
+    1 program: PROGRAM ID '(' program_arguments ')' ';' declarations compound_statement '.' •
 
-    INT  shift, and go to state 28
+    $default  reduce using rule 1 (program)
 
 
 State 24
 
-   10 statement: WRITE '(' • variable ')'
+    5 identifier_list: identifier_list ',' • ID
 
-    ID  shift, and go to state 17
-
-    variable  go to state 29
+    ID  shift, and go to state 30
 
 
 State 25
 
-    6 compound_statement: BEG statement_list END •
+    6 declarations: declarations VAR identifier_list ':' • INT ';'
 
-    $default  reduce using rule 6 (compound_statement)
+    INT  shift, and go to state 31
 
 
 State 26
 
-    8 statement_list: statement_list ';' • statement
+   12 statement: WRITE '(' • variable ')'
 
-    ID     shift, and go to state 17
-    WRITE  shift, and go to state 18
+    ID  shift, and go to state 18
 
-    statement  go to state 30
-    variable   go to state 21
+    variable  go to state 32
 
 
 State 27
 
-    9 statement: variable ASSIGN • expression
+    8 compound_statement: BEG statement_list END •
 
-    ID   shift, and go to state 17
-    VAL  shift, and go to state 31
-    '('  shift, and go to state 32
-
-    variable           go to state 33
-    expression         go to state 34
-    simple_expression  go to state 35
-    term               go to state 36
-    factor             go to state 37
+    $default  reduce using rule 8 (compound_statement)
 
 
 State 28
 
-    4 declarations: declarations VAR identifier_list ':' INT • ';'
+   10 statement_list: statement_list ';' • statement
 
-    ';'  shift, and go to state 38
+    ID     shift, and go to state 18
+    WRITE  shift, and go to state 19
+
+    statement  go to state 33
+    variable   go to state 22
 
 
 State 29
 
-   10 statement: WRITE '(' variable • ')'
+   11 statement: variable ASSIGN • expression
 
-    ')'  shift, and go to state 39
+    ID   shift, and go to state 18
+    VAL  shift, and go to state 34
+    '('  shift, and go to state 35
+
+    variable           go to state 36
+    expression         go to state 37
+    simple_expression  go to state 38
+    term               go to state 39
+    factor             go to state 40
 
 
 State 30
 
-    8 statement_list: statement_list ';' statement •
+    5 identifier_list: identifier_list ',' ID •
 
-    $default  reduce using rule 8 (statement_list)
+    $default  reduce using rule 5 (identifier_list)
 
 
 State 31
 
-   18 factor: VAL •
+    6 declarations: declarations VAR identifier_list ':' INT • ';'
 
-    $default  reduce using rule 18 (factor)
+    ';'  shift, and go to state 41
 
 
 State 32
 
-   19 factor: '(' • expression ')'
+   12 statement: WRITE '(' variable • ')'
 
-    ID   shift, and go to state 17
-    VAL  shift, and go to state 31
-    '('  shift, and go to state 32
-
-    variable           go to state 33
-    expression         go to state 40
-    simple_expression  go to state 35
-    term               go to state 36
-    factor             go to state 37
+    ')'  shift, and go to state 42
 
 
 State 33
 
-   17 factor: variable •
+   10 statement_list: statement_list ';' statement •
 
-    $default  reduce using rule 17 (factor)
+    $default  reduce using rule 10 (statement_list)
 
 
 State 34
 
-    9 statement: variable ASSIGN expression •
+   20 factor: VAL •
 
-    $default  reduce using rule 9 (statement)
+    $default  reduce using rule 20 (factor)
 
 
 State 35
 
-   12 expression: simple_expression •
-   14 simple_expression: simple_expression • ADDOP term
+   21 factor: '(' • expression ')'
 
-    ADDOP  shift, and go to state 41
+    ID   shift, and go to state 18
+    VAL  shift, and go to state 34
+    '('  shift, and go to state 35
 
-    $default  reduce using rule 12 (expression)
+    variable           go to state 36
+    expression         go to state 43
+    simple_expression  go to state 38
+    term               go to state 39
+    factor             go to state 40
 
 
 State 36
 
-   13 simple_expression: term •
-   16 term: term • MULOP factor
-
-    MULOP  shift, and go to state 42
-
-    $default  reduce using rule 13 (simple_expression)
-
-
-State 37
-
-   15 term: factor •
-
-    $default  reduce using rule 15 (term)
-
-
-State 38
-
-    4 declarations: declarations VAR identifier_list ':' INT ';' •
-
-    $default  reduce using rule 4 (declarations)
-
-
-State 39
-
-   10 statement: WRITE '(' variable ')' •
-
-    $default  reduce using rule 10 (statement)
-
-
-State 40
-
-   19 factor: '(' expression • ')'
-
-    ')'  shift, and go to state 43
-
-
-State 41
-
-   14 simple_expression: simple_expression ADDOP • term
-
-    ID   shift, and go to state 17
-    VAL  shift, and go to state 31
-    '('  shift, and go to state 32
-
-    variable  go to state 33
-    term      go to state 44
-    factor    go to state 37
-
-
-State 42
-
-   16 term: term MULOP • factor
-
-    ID   shift, and go to state 17
-    VAL  shift, and go to state 31
-    '('  shift, and go to state 32
-
-    variable  go to state 33
-    factor    go to state 45
-
-
-State 43
-
-   19 factor: '(' expression ')' •
+   19 factor: variable •
 
     $default  reduce using rule 19 (factor)
 
 
+State 37
+
+   11 statement: variable ASSIGN expression •
+
+    $default  reduce using rule 11 (statement)
+
+
+State 38
+
+   14 expression: simple_expression •
+   16 simple_expression: simple_expression • ADDOP term
+
+    ADDOP  shift, and go to state 44
+
+    $default  reduce using rule 14 (expression)
+
+
+State 39
+
+   15 simple_expression: term •
+   18 term: term • MULOP factor
+
+    MULOP  shift, and go to state 45
+
+    $default  reduce using rule 15 (simple_expression)
+
+
+State 40
+
+   17 term: factor •
+
+    $default  reduce using rule 17 (term)
+
+
+State 41
+
+    6 declarations: declarations VAR identifier_list ':' INT ';' •
+
+    $default  reduce using rule 6 (declarations)
+
+
+State 42
+
+   12 statement: WRITE '(' variable ')' •
+
+    $default  reduce using rule 12 (statement)
+
+
+State 43
+
+   21 factor: '(' expression • ')'
+
+    ')'  shift, and go to state 46
+
+
 State 44
 
-   14 simple_expression: simple_expression ADDOP term •
-   16 term: term • MULOP factor
+   16 simple_expression: simple_expression ADDOP • term
 
-    MULOP  shift, and go to state 42
+    ID   shift, and go to state 18
+    VAL  shift, and go to state 34
+    '('  shift, and go to state 35
 
-    $default  reduce using rule 14 (simple_expression)
+    variable  go to state 36
+    term      go to state 47
+    factor    go to state 40
 
 
 State 45
 
-   16 term: term MULOP factor •
+   18 term: term MULOP • factor
 
-    $default  reduce using rule 16 (term)
+    ID   shift, and go to state 18
+    VAL  shift, and go to state 34
+    '('  shift, and go to state 35
+
+    variable  go to state 36
+    factor    go to state 48
+
+
+State 46
+
+   21 factor: '(' expression ')' •
+
+    $default  reduce using rule 21 (factor)
+
+
+State 47
+
+   16 simple_expression: simple_expression ADDOP term •
+   18 term: term • MULOP factor
+
+    MULOP  shift, and go to state 45
+
+    $default  reduce using rule 16 (simple_expression)
+
+
+State 48
+
+   18 term: term MULOP factor •
+
+    $default  reduce using rule 18 (term)

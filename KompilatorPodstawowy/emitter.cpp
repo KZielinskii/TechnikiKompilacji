@@ -5,70 +5,52 @@
 
 std::vector<std::string> asmCode;
 
-int tempRegCounter = 12;  // Rejestry tymczasowe zaczynają się od 12
-
-int getTemp() {
-    return tempRegCounter++;
-}
-
-// Funkcja zwracająca operand dla maszyny (czyli taki, jaki ma trafić do wygenerowanego kodu)
-std::string machineOperand(int op) {
-    // Jeżeli op jest indeksem w tabeli symboli i odpowiada literałowi
-    if (op < (int)symtable.size()) {
-        const symbol_t &sym = symtable[op];
-        if (sym.token == VAL) {
-            return "#" + sym.name;  // np. "#1"
-        }
-    }
-    // Jeśli istnieje zmienna (token ID) o adresie równym op, zwracamy adres numerycznie
+std::string machineOperand(int op) {    
     for (const auto &sym : symtable) {
-        if (sym.token == ID && sym.address == op) {
-            return std::to_string(op);  // np. "0" lub "4"
+        if (sym.address == op && sym.token == VAL) {
+            return "#" + sym.name;
+        }
+        if (sym.address == op && sym.token == VAR && sym.type == INT) {
+            return std::to_string(sym.address);
         }
     }
-    // W przeciwnym razie traktujemy op jako numer rejestru tymczasowego.
-    int tempBase = 8;  // ustaliliśmy, że getTemp() zaczyna od 8
-    int regIndex = op - tempBase;
-    return "$t" + std::to_string(regIndex);
+    
+    return std::to_string(-1);
 }
 
-// Funkcja zwracająca operand symboliczny (do komentarza)
+
 std::string symbolicOperand(int op) {
-    if (op < (int)symtable.size()) {
-        const symbol_t &sym = symtable[op];
-        if (sym.token == VAL) {
-            return sym.name;  // np. "1"
-        }
-    }
+    
     for (const auto &sym : symtable) {
-        if (sym.token == ID && sym.address == op) {
-            return sym.name;  // np. "a" lub "b"
-        }
+        if (sym.address == op && sym.token == VAL)
+            return sym.name;
+        if (sym.address == op && sym.token == ID && sym.type == INT)
+            return sym.name;
     }
-    int tempBase = 8;
-    int regIndex = op - tempBase;
-    return "$t" + std::to_string(regIndex);
+    
+    return "$t" + std::to_string(-1);
 }
 
 
-void emit(std::string op, int src, int dest) {
+
+void emit_mov(std::string op, int address1, int address2) {
     std::ostringstream oss;
-    oss << "\t" << op << "\t" << machineOperand(src) << "," << machineOperand(dest);
-    oss << "\t ; " << op << " " << symbolicOperand(src) << "," << symbolicOperand(dest);
+    oss << "\t" << op << "\t" << machineOperand(address1) << "," << machineOperand(address2);
+    oss << "\t ; " << op << " " << symbolicOperand(address1) << "," << symbolicOperand(address2);
     asmCode.push_back(oss.str());
 }
 
-void emit(std::string op, int dest) {
+void emit_write(std::string op, int address) {
     std::ostringstream oss;
-    oss << "\t" << op << "\t" << machineOperand(dest);
-    oss << "\t ; " << op << " " << symbolicOperand(dest);
+    oss << "\t" << op << "\t" << machineOperand(address);
+    oss << "\t ; " << op << " " << symbolicOperand(address);
     asmCode.push_back(oss.str());
 }
 
-void emit(std::string op, int src1, int src2, int dest) {
+void emit_op(std::string op, int address1, int address2, int address3) {
     std::ostringstream oss;
-    oss << "\t" << op << "\t" << machineOperand(src1) << "," << machineOperand(src2) << "," << machineOperand(dest);
-    oss << "\t ; " << op << " " << symbolicOperand(src1) << "," << symbolicOperand(src2) << "," << symbolicOperand(dest);
+    oss << "\t" << op << "\t" << machineOperand(address1) << "," << machineOperand(address2) << "," << machineOperand(address3);
+    oss << "\t ; " << op << " " << symbolicOperand(address1) << "," << symbolicOperand(address2) << "," << symbolicOperand(address3);
     asmCode.push_back(oss.str());
 }
 
