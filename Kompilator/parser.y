@@ -15,13 +15,11 @@ void yyerror(const char* s);
 %%
 
 program:
-    PROGRAM ID '(' program_arguments ')' ';'
-    declarations compound_statement '.'
+    PROGRAM ID '(' identifier_list ')' ';'
+    declarations 
+    compound_statement 
+    '.'
     ;
-
-program_arguments:
-    ID 
-    | program_arguments ',' ID;
 
 identifier_list:
     ID { listID.push_back($1); }
@@ -29,27 +27,23 @@ identifier_list:
     ;
 
 declarations:
-    declarations VAR identifier_list ':' INT ';' { 
+    declarations VAR identifier_list ':' type ';' { 
+        int size = ($5 == INT) ? 4 : 8;
         for (int id : listID) {
-            symtable[id].type = INT;
+            symtable[id].type = $5;
             symtable[id].token = VAR;
             symtable[id].address = tempCountAddress;
-            tempCountAddress += 4;
-        }
-        listID.clear();
-    }
-    | declarations VAR identifier_list ':' REAL ';' { 
-        for (int id : listID) {
-            symtable[id].type = REAL;
-            symtable[id].token = VAR;
-            symtable[id].address = tempCountAddress;
-            tempCountAddress += 8;
+            tempCountAddress += size;
         }
         listID.clear();
     }
     | /* empty */
     ;
 
+type:
+    INT
+    | REAL
+    ;
 
 compound_statement:
     BEG statement_list END
@@ -62,10 +56,12 @@ statement_list:
 
 statement:
     variable ASSIGN expression { 
-        emit_mov("mov.i", $3, $1);
+        std::string movType = (symtable[$1].type == REAL || symtable[$3].type == REAL) ? "mov.r" : "mov.i";
+        emit_mov(movType, $3, $1);
     }
     | WRITE '(' variable ')' { 
-        emit_write("write.i", $3);
+        std::string writeType = (symtable[$3].type == REAL) ? "write.r" : "write.i";
+        emit_write(writeType, $3);
     }
     ;
 

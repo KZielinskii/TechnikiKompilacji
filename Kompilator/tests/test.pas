@@ -3,10 +3,14 @@ var a, b: integer;
 var c, d: real;
 
 begin
-  a:=1;
-  b:=5;
-  c:=1.5;
+  a:=3;
+  b:=12;
+  c:=16.15;
   d:=4.25;
-  d:= c + d;
-  write(d)
+  a:=a+b;
+  c:=c+d;
+  b:=a+c;
+  write(a);
+  write(b);
+  write(c)
 end.

@@ -31,7 +31,7 @@ var         {return VAR;}
 integer     {yylval = INT; return INT;}
 real        {yylval = REAL; return REAL;}
 
-:=          {return ASSIGN;}
+{assign}    {return ASSIGN;}
 {addop}     {yylval = getOperationToken(yytext); return ADDOP;}
 {mulop}     {yylval = getOperationToken(yytext); return MULOP;}
 

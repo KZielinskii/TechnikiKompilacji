@@ -37,8 +37,6 @@ std::string symbolicOperand(int op) {
     return std::to_string(-1);
 }
 
-
-
 void emit_mov(std::string op, int index1, int index2) {
     std::ostringstream oss;
     
