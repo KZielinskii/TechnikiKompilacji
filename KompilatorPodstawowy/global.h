@@ -26,4 +26,4 @@ const char *token_name(int);
 
 void emit_mov(std::string op, int src, int dest);
 void emit_write(std::string op, int dest);
-void emit_op(std::string op, int src1, int src2, int dest);
+int emit_op(std::string op, int src1, int src2, int dest);

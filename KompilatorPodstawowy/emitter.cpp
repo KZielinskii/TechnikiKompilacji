@@ -47,19 +47,20 @@ void emit_mov(std::string op, int index1, int index2) {
     asmCode.push_back(oss.str());
 }
 
-void emit_write(std::string op, int address) {
+void emit_write(std::string op, int index) {
     std::ostringstream oss;
-    oss << "\t" << op << "\t" << machineOperand(address);
-    oss << "\t ; " << op << " " << symbolicOperand(address);
+    oss << "\t" << op << "\t" << machineOperand(index);
+    oss << "\t ; " << op << " " << symbolicOperand(index);
     asmCode.push_back(oss.str());
 }
 
-void emit_op(std::string op, int address1, int address2, int address3) {
-    newTemp(INT, address3);
+int emit_op(std::string op, int index1, int index2, int address3) {
+    int index3 = newTemp(INT, address3);
     std::ostringstream oss;
-    oss << "\t" << op << "\t" << machineOperand(address1) << "," << machineOperand(address2) << "," << machineOperand(address3);
-    oss << "\t ; " << op << " " << symbolicOperand(address1) << "," << symbolicOperand(address2) << "," << symbolicOperand(address3);
+    oss << "\t" << op << "\t" << machineOperand(index1) << "," << machineOperand(index2) << "," << machineOperand(index3);
+    oss << "\t ; " << op << " " << symbolicOperand(index1) << "," << symbolicOperand(index2) << "," << symbolicOperand(index3);
     asmCode.push_back(oss.str());
+    return index3;
 }
 
 

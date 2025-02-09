@@ -70,26 +70,29 @@ expression:
 simple_expression:
     term { $$ = $1; }
     | simple_expression ADDOP term { 
-        if ($2 == ADD)
-            emit_op("add.i", $1, $3, tempCountAddress);
-        else if ($2 == SUB)
-            emit_op("sub.i", $1, $3, tempCountAddress);
-        $$ = tempCountAddress;
+        int tempVar = tempCountAddress;
         tempCountAddress += 4;
+
+        if ($2 == ADD)
+            $$ = emit_op("add.i", $1, $3, tempVar);
+        else if ($2 == SUB)
+            $$ = emit_op("sub.i", $1, $3, tempVar);
     }
     ;
 
 term:
     factor { $$ = $1; }
     | term MULOP factor {
-        if ($2 == MUL)
-            emit_op("mul.i", $1, $3, tempCountAddress);
-        else if ($2 == DIV)
-            emit_op("div.i", $1, $3, tempCountAddress);
-        else if ($2 == MOD)
-            emit_op("mod.i", $1, $3, tempCountAddress);
-        $$ = tempCountAddress;
+        int tempVar = tempCountAddress;
         tempCountAddress += 4;
+
+        if ($2 == MUL)
+            $$ = emit_op("mul.i", $1, $3, tempVar);
+        else if ($2 == DIV)
+            $$ = emit_op("div.i", $1, $3, tempVar);
+        else if ($2 == MOD)
+            $$ = emit_op("mod.i", $1, $3, tempVar);
+
     }
 
 factor:

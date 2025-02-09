@@ -532,8 +532,8 @@ static const yytype_int8 yytranslate[] =
 static const yytype_int8 yyrline[] =
 {
        0,    18,    18,    23,    24,    27,    28,    32,    41,    45,
-      49,    50,    54,    57,    63,    67,    71,    72,    83,    84,
-      96,    97,    98
+      49,    50,    54,    57,    63,    67,    71,    72,    84,    85,
+      99,   100,   101
 };
 #endif
 
@@ -1170,51 +1170,54 @@ yyreduce:
   case 17: /* simple_expression: simple_expression ADDOP term  */
 #line 72 "parser.y"
                                    { 
-        if (yyvsp[-1] == ADD)
-            emit_op("add.i", yyvsp[-2], yyvsp[0], tempCountAddress);
-        else if (yyvsp[-1] == SUB)
-            emit_op("sub.i", yyvsp[-2], yyvsp[0], tempCountAddress);
-        yyval = tempCountAddress;
+        int tempVar = tempCountAddress;
         tempCountAddress += 4;
+
+        if (yyvsp[-1] == ADD)
+            yyval = emit_op("add.i", yyvsp[-2], yyvsp[0], tempVar);
+        else if (yyvsp[-1] == SUB)
+            yyval = emit_op("sub.i", yyvsp[-2], yyvsp[0], tempVar);
     }
-#line 1181 "parser.cpp"
+#line 1182 "parser.cpp"
     break;
 
   case 18: /* term: factor  */
-#line 83 "parser.y"
+#line 84 "parser.y"
            { yyval = yyvsp[0]; }
-#line 1187 "parser.cpp"
+#line 1188 "parser.cpp"
     break;
 
   case 19: /* term: term MULOP factor  */
-#line 84 "parser.y"
+#line 85 "parser.y"
                         {
-        if (yyvsp[-1] == MUL)
-            emit_op("mul.i", yyvsp[-2], yyvsp[0], tempCountAddress);
-        else if (yyvsp[-1] == DIV)
-            emit_op("div.i", yyvsp[-2], yyvsp[0], tempCountAddress);
-        else if (yyvsp[-1] == MOD)
-            emit_op("mod.i", yyvsp[-2], yyvsp[0], tempCountAddress);
-        yyval = tempCountAddress;
+        int tempVar = tempCountAddress;
         tempCountAddress += 4;
+
+        if (yyvsp[-1] == MUL)
+            yyval = emit_op("mul.i", yyvsp[-2], yyvsp[0], tempVar);
+        else if (yyvsp[-1] == DIV)
+            yyval = emit_op("div.i", yyvsp[-2], yyvsp[0], tempVar);
+        else if (yyvsp[-1] == MOD)
+            yyval = emit_op("mod.i", yyvsp[-2], yyvsp[0], tempVar);
+
     }
-#line 1202 "parser.cpp"
+#line 1205 "parser.cpp"
     break;
 
   case 20: /* factor: variable  */
-#line 96 "parser.y"
+#line 99 "parser.y"
              { yyval = yyvsp[0]; }
-#line 1208 "parser.cpp"
+#line 1211 "parser.cpp"
     break;
 
   case 21: /* factor: NUM  */
-#line 97 "parser.y"
+#line 100 "parser.y"
           { yyval = yyvsp[0]; }
-#line 1214 "parser.cpp"
+#line 1217 "parser.cpp"
     break;
 
 
-#line 1218 "parser.cpp"
+#line 1221 "parser.cpp"
 
       default: break;
     }
@@ -1407,7 +1410,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 101 "parser.y"
+#line 104 "parser.y"
 
 
 void yyerror(const char* s) {
