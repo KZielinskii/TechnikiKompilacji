@@ -10,7 +10,7 @@ int yylex();
 void yyerror(const char* s);
 %}
 
-%token PROGRAM ID INT VAR NUM LABEL PROC NONE BEG END ASSIGN ADDOP MULOP WRITE READ
+%token PROGRAM ID INT REAL VAR NUM LABEL PROC NONE BEG END ASSIGN ADDOP MULOP WRITE READ
 
 %%
 
@@ -38,8 +38,18 @@ declarations:
         }
         listID.clear();
     }
+    | declarations VAR identifier_list ':' REAL ';' { 
+        for (int id : listID) {
+            symtable[id].type = REAL;
+            symtable[id].token = VAR;
+            symtable[id].address = tempCountAddress;
+            tempCountAddress += 8;
+        }
+        listID.clear();
+    }
     | /* empty */
     ;
+
 
 compound_statement:
     BEG statement_list END
@@ -71,12 +81,22 @@ simple_expression:
     term { $$ = $1; }
     | simple_expression ADDOP term { 
         int tempVar = tempCountAddress;
-        tempCountAddress += 4;
+        tempCountAddress += (isReal($1) || isReal($3)) ? 8 : 4;
 
-        if ($2 == ADD)
-            $$ = emit_op("add.i", $1, $3, tempVar);
-        else if ($2 == SUB)
-            $$ = emit_op("sub.i", $1, $3, tempVar);
+        if ($2 == ADD) {
+            if (isReal($1) || isReal($3)) {
+                $$ = emit_op("add.r", $1, $3, tempVar);
+            } else {
+                $$ = emit_op("add.i", $1, $3, tempVar);
+            }
+        }
+        else if ($2 == SUB) {
+            if (isReal($1) || isReal($3)) {
+                $$ = emit_op("sub.r", $1, $3, tempVar);
+            } else {
+                $$ = emit_op("sub.i", $1, $3, tempVar);
+            }
+        }
     }
     ;
 
@@ -84,15 +104,29 @@ term:
     factor { $$ = $1; }
     | term MULOP factor {
         int tempVar = tempCountAddress;
-        tempCountAddress += 4;
+        tempCountAddress += (isReal($1) || isReal($3)) ? 8 : 4;
 
-        if ($2 == MUL)
-            $$ = emit_op("mul.i", $1, $3, tempVar);
-        else if ($2 == DIV)
-            $$ = emit_op("div.i", $1, $3, tempVar);
-        else if ($2 == MOD)
-            $$ = emit_op("mod.i", $1, $3, tempVar);
-
+        if ($2 == MUL) {
+            if (isReal($1) || isReal($3)) {
+                $$ = emit_op("mul.r", $1, $3, tempVar);
+            } else {
+                $$ = emit_op("mul.i", $1, $3, tempVar);
+            }
+        }
+        else if ($2 == DIV) {
+            if (isReal($1) || isReal($3)) {
+                $$ = emit_op("div.r", $1, $3, tempVar);
+            } else {
+                $$ = emit_op("div.i", $1, $3, tempVar);
+            }
+        }
+        else if ($2 == MOD) {
+            if (isReal($1) || isReal($3)) {
+                $$ = emit_op("mod.r", $1, $3, tempVar);
+            } else {
+                $$ = emit_op("mod.i", $1, $3, tempVar);
+            }
+        }
     }
 
 factor:

@@ -1,9 +1,12 @@
 program example(input, output);
-var a, b, result: integer;
+var a, b: integer;
+var c, d: real;
 
 begin
   a:=1;
   b:=5;
-  result:= a + (b * 12) / 2 div 1;
-  write(result)
+  c:=1.5;
+  d:=4.25;
+  d:= c + d;
+  write(d)
 end.

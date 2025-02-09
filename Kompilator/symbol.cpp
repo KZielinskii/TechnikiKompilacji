@@ -48,6 +48,10 @@ int newTemp(int type, int address) {
     return symtable.size() - 1;
 }
 
+bool isReal(int index) {
+  return symtable[index].type == REAL;
+}
+
 
 void printSymtable()
 {

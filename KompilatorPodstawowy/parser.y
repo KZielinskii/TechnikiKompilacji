@@ -15,13 +15,11 @@ void yyerror(const char* s);
 %%
 
 program:
-    PROGRAM ID '(' program_arguments ')' ';'
-    declarations compound_statement '.'
+    PROGRAM ID '(' identifier_list ')' ';'
+    declarations 
+    compound_statement 
+    '.'
     ;
-
-program_arguments:
-    ID 
-    | program_arguments ',' ID;
 
 identifier_list:
     ID { listID.push_back($1); }
@@ -29,7 +27,7 @@ identifier_list:
     ;
 
 declarations:
-    declarations VAR identifier_list ':' INT ';' { 
+    declarations VAR identifier_list ':' type ';' { 
         for (int id : listID) {
             symtable[id].type = INT;
             symtable[id].token = VAR;
@@ -39,6 +37,10 @@ declarations:
         listID.clear();
     }
     | /* empty */
+    ;
+
+type:
+    INT
     ;
 
 compound_statement:

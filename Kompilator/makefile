@@ -5,7 +5,7 @@ SRCS = emitter.cpp main.cpp symbol.cpp tokens.cpp lexer.cpp parser.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 
-TARGET = Kompilator_podstawowy
+TARGET = Kompilator
 
 all: lexer.cpp parser.cpp $(OBJS)
 	$(CC) -o $(TARGET) $(OBJS) -lfl
