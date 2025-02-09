@@ -7,10 +7,6 @@ begin
   b:=12;
   c:=16.15;
   d:=4.25;
-  a:=a+b;
-  c:=c+d;
-  b:=a+c;
-  write(a);
-  write(b);
-  write(c)
+  b:=a+c-d+b;
+  write(b)
 end.

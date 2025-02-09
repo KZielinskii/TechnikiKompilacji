@@ -56,12 +56,10 @@ statement_list:
 
 statement:
     variable ASSIGN expression { 
-        std::string movType = (symtable[$1].type == REAL || symtable[$3].type == REAL) ? "mov.r" : "mov.i";
-        emit_mov(movType, $3, $1);
+        gencode_mov($3, $1);
     }
     | WRITE '(' variable ')' { 
-        std::string writeType = (symtable[$3].type == REAL) ? "write.r" : "write.i";
-        emit_write(writeType, $3);
+        gencode_write($3);
     }
     ;
 
@@ -76,22 +74,11 @@ expression:
 simple_expression:
     term { $$ = $1; }
     | simple_expression ADDOP term { 
-        int tempVar = tempCountAddress;
-        tempCountAddress += (isReal($1) || isReal($3)) ? 8 : 4;
-
         if ($2 == ADD) {
-            if (isReal($1) || isReal($3)) {
-                $$ = emit_op("add.r", $1, $3, tempVar);
-            } else {
-                $$ = emit_op("add.i", $1, $3, tempVar);
-            }
+            $$ = gencode_op("add", $1, $3);
         }
         else if ($2 == SUB) {
-            if (isReal($1) || isReal($3)) {
-                $$ = emit_op("sub.r", $1, $3, tempVar);
-            } else {
-                $$ = emit_op("sub.i", $1, $3, tempVar);
-            }
+            $$ = gencode_op("sub", $1, $3);
         }
     }
     ;
@@ -99,29 +86,14 @@ simple_expression:
 term:
     factor { $$ = $1; }
     | term MULOP factor {
-        int tempVar = tempCountAddress;
-        tempCountAddress += (isReal($1) || isReal($3)) ? 8 : 4;
-
         if ($2 == MUL) {
-            if (isReal($1) || isReal($3)) {
-                $$ = emit_op("mul.r", $1, $3, tempVar);
-            } else {
-                $$ = emit_op("mul.i", $1, $3, tempVar);
-            }
+            $$ = gencode_op("mul", $1, $3);
         }
         else if ($2 == DIV) {
-            if (isReal($1) || isReal($3)) {
-                $$ = emit_op("div.r", $1, $3, tempVar);
-            } else {
-                $$ = emit_op("div.i", $1, $3, tempVar);
-            }
+            $$ = gencode_op("div", $1, $3);
         }
         else if ($2 == MOD) {
-            if (isReal($1) || isReal($3)) {
-                $$ = emit_op("mod.r", $1, $3, tempVar);
-            } else {
-                $$ = emit_op("mod.i", $1, $3, tempVar);
-            }
+            $$ = gencode_op("mod", $1, $3);
         }
     }
 
@@ -140,4 +112,10 @@ void yyerror(const char* s) {
 
 const char *token_name(int token) {
     return yytname[YYTRANSLATE(token)];
+}
+
+int getTempAddress(int size) {
+    int temp = tempCountAddress;
+    tempCountAddress+=size;
+    return temp;
 }

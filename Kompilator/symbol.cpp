@@ -36,12 +36,12 @@ int insert(std::string name, int token, int type) {
     return symtable.size() - 1;  // Zwracamy indeks nowego symbolu
 }
 
-int newTemp(int type, int address) {
+int newTemp(int type) {
     symbol_t newSymbol;
     newSymbol.name = "t"+ std::to_string(coutTemp);
     newSymbol.token = VAR;
     newSymbol.type = type;
-    newSymbol.address = address;
+    newSymbol.address = getTempAddress((type == INT) ? 4 : 8);
     coutTemp++;
 
     symtable.push_back(newSymbol);
@@ -55,13 +55,12 @@ bool isReal(int index) {
 
 void printSymtable()
 {
-
   std::cout << "\n\n" << "Tabela symboli: " << "\n";
   int i = 0;
   for (auto symbol : symtable)
   {
     std::cout
-        << i++ << " " << token_name(symbol.token) << "\t" << symbol.name << "\t"
-        << ((symbol.token == VAR) ? "\t" + std::to_string(symbol.address) : "") << std::endl;
+        << i++ << " " << token_name(symbol.token) << "\t" << symbol.name << "\t" << ((symbol.token == VAR) ? ((symbol.type == INT) ? "INT" : "REAL") : "") << "\t"
+        << ((symbol.token == VAR) ? "\t" + std::to_string(symbol.address) : "")<< std::endl;
   }
 }

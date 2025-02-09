@@ -530,11 +530,11 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_int8 yyrline[] =
 {
        0,    18,    18,    25,    26,    30,    40,    44,    45,    49,
-      53,    54,    58,    62,    69,    73,    77,    78,   100,   101,
-     129,   130,   131
+      53,    54,    58,    61,    67,    71,    75,    76,    87,    88,
+     101,   102,   103
 };
 #endif
 
@@ -1148,108 +1148,80 @@ yyreduce:
   case 12: /* statement: variable ASSIGN expression  */
 #line 58 "parser.y"
                                { 
-        std::string movType = (symtable[yyvsp[-2]].type == REAL || symtable[yyvsp[0]].type == REAL) ? "mov.r" : "mov.i";
-        emit_mov(movType, yyvsp[0], yyvsp[-2]);
+        gencode_mov(yyvsp[0], yyvsp[-2]);
     }
-#line 1155 "parser.cpp"
+#line 1154 "parser.cpp"
     break;
 
   case 13: /* statement: WRITE '(' variable ')'  */
-#line 62 "parser.y"
+#line 61 "parser.y"
                              { 
-        std::string writeType = (symtable[yyvsp[-1]].type == REAL) ? "write.r" : "write.i";
-        emit_write(writeType, yyvsp[-1]);
+        gencode_write(yyvsp[-1]);
     }
-#line 1164 "parser.cpp"
+#line 1162 "parser.cpp"
     break;
 
   case 16: /* simple_expression: term  */
-#line 77 "parser.y"
+#line 75 "parser.y"
          { yyval = yyvsp[0]; }
-#line 1170 "parser.cpp"
+#line 1168 "parser.cpp"
     break;
 
   case 17: /* simple_expression: simple_expression ADDOP term  */
-#line 78 "parser.y"
+#line 76 "parser.y"
                                    { 
-        int tempVar = tempCountAddress;
-        tempCountAddress += (isReal(yyvsp[-2]) || isReal(yyvsp[0])) ? 8 : 4;
-
         if (yyvsp[-1] == ADD) {
-            if (isReal(yyvsp[-2]) || isReal(yyvsp[0])) {
-                yyval = emit_op("add.r", yyvsp[-2], yyvsp[0], tempVar);
-            } else {
-                yyval = emit_op("add.i", yyvsp[-2], yyvsp[0], tempVar);
-            }
+            yyval = gencode_op("add", yyvsp[-2], yyvsp[0]);
         }
         else if (yyvsp[-1] == SUB) {
-            if (isReal(yyvsp[-2]) || isReal(yyvsp[0])) {
-                yyval = emit_op("sub.r", yyvsp[-2], yyvsp[0], tempVar);
-            } else {
-                yyval = emit_op("sub.i", yyvsp[-2], yyvsp[0], tempVar);
-            }
+            yyval = gencode_op("sub", yyvsp[-2], yyvsp[0]);
         }
     }
-#line 1194 "parser.cpp"
+#line 1181 "parser.cpp"
     break;
 
   case 18: /* term: factor  */
-#line 100 "parser.y"
+#line 87 "parser.y"
            { yyval = yyvsp[0]; }
-#line 1200 "parser.cpp"
+#line 1187 "parser.cpp"
     break;
 
   case 19: /* term: term MULOP factor  */
-#line 101 "parser.y"
+#line 88 "parser.y"
                         {
-        int tempVar = tempCountAddress;
-        tempCountAddress += (isReal(yyvsp[-2]) || isReal(yyvsp[0])) ? 8 : 4;
-
         if (yyvsp[-1] == MUL) {
-            if (isReal(yyvsp[-2]) || isReal(yyvsp[0])) {
-                yyval = emit_op("mul.r", yyvsp[-2], yyvsp[0], tempVar);
-            } else {
-                yyval = emit_op("mul.i", yyvsp[-2], yyvsp[0], tempVar);
-            }
+            yyval = gencode_op("mul", yyvsp[-2], yyvsp[0]);
         }
         else if (yyvsp[-1] == DIV) {
-            if (isReal(yyvsp[-2]) || isReal(yyvsp[0])) {
-                yyval = emit_op("div.r", yyvsp[-2], yyvsp[0], tempVar);
-            } else {
-                yyval = emit_op("div.i", yyvsp[-2], yyvsp[0], tempVar);
-            }
+            yyval = gencode_op("div", yyvsp[-2], yyvsp[0]);
         }
         else if (yyvsp[-1] == MOD) {
-            if (isReal(yyvsp[-2]) || isReal(yyvsp[0])) {
-                yyval = emit_op("mod.r", yyvsp[-2], yyvsp[0], tempVar);
-            } else {
-                yyval = emit_op("mod.i", yyvsp[-2], yyvsp[0], tempVar);
-            }
+            yyval = gencode_op("mod", yyvsp[-2], yyvsp[0]);
         }
     }
-#line 1231 "parser.cpp"
+#line 1203 "parser.cpp"
     break;
 
   case 20: /* factor: variable  */
-#line 129 "parser.y"
+#line 101 "parser.y"
              { yyval = yyvsp[0]; }
-#line 1237 "parser.cpp"
+#line 1209 "parser.cpp"
     break;
 
   case 21: /* factor: NUM  */
-#line 130 "parser.y"
+#line 102 "parser.y"
           { yyval = yyvsp[0]; }
-#line 1243 "parser.cpp"
+#line 1215 "parser.cpp"
     break;
 
   case 22: /* factor: '(' expression ')'  */
-#line 131 "parser.y"
+#line 103 "parser.y"
                           { yyval = yyvsp[-1]; }
-#line 1249 "parser.cpp"
+#line 1221 "parser.cpp"
     break;
 
 
-#line 1253 "parser.cpp"
+#line 1225 "parser.cpp"
 
       default: break;
     }
@@ -1442,7 +1414,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 134 "parser.y"
+#line 106 "parser.y"
 
 
 void yyerror(const char* s) {
@@ -1452,4 +1424,10 @@ void yyerror(const char* s) {
 
 const char *token_name(int token) {
     return yytname[YYTRANSLATE(token)];
+}
+
+int getTempAddress(int size) {
+    int temp = tempCountAddress;
+    tempCountAddress+=size;
+    return temp;
 }
