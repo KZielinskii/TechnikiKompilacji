@@ -5,7 +5,11 @@
 
 std::vector<std::string> asmCode;
 
-std::string machineOperand(int op) {    
+std::string machineOperand(int op) {   
+    if (op >= (int)symtable.size()) {
+        std::cout << "Błąd index" << std::to_string(op) << "!!!!!!!!!!\n"; 
+        return std::to_string(-1);
+    }
     symbol_t sym = symtable.at(op);
     
     if(sym.token==NUM) {
@@ -19,6 +23,9 @@ std::string machineOperand(int op) {
 
 
 std::string symbolicOperand(int op) {
+    if (op >= (int)symtable.size()) {
+        return std::to_string(-1);
+    }
     symbol_t sym = symtable.at(op);
     if(sym.token==NUM) {
         return sym.name;
@@ -49,10 +56,10 @@ void emit_write(std::string op, int address) {
 
 void emit_op(std::string op, int address1, int address2, int address3) {
     newTemp(INT, address3);
-   /* std::ostringstream oss;
+    std::ostringstream oss;
     oss << "\t" << op << "\t" << machineOperand(address1) << "," << machineOperand(address2) << "," << machineOperand(address3);
     oss << "\t ; " << op << " " << symbolicOperand(address1) << "," << symbolicOperand(address2) << "," << symbolicOperand(address3);
-    asmCode.push_back(oss.str());*/
+    asmCode.push_back(oss.str());
 }
 
 

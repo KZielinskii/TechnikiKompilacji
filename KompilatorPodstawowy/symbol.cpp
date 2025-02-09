@@ -51,38 +51,13 @@ int newTemp(int type, int address) {
 
 void printSymtable()
 {
-  int name = 0, token = 0, type = 0;
-  for (auto symbol : symtable)
-  {
-    if (name < (int)symbol.name.length()) {
-      name = symbol.name.length();
-    } 
-
-    std::string tok = std::string(token_name(symbol.token));
-
-    if (token < (int)tok.length()) {
-      token = tok.length();
-    }
-
-    std::string type = std::string(token_name(symbol.type));
-
-    if (token < (int)type.length()) {
-      token = type.length();
-    } 
-  }
 
   std::cout << "\n\n" << "Tabela symboli: " << "\n";
   int i = 0;
   for (auto symbol : symtable)
   {
     std::cout
-        << std::setw(std::to_string(symtable.size()).length()) << i++ << " "
-        << std::setw(token + 2) << token_name(symbol.token) << " "
-        << std::setw(name + 2) << symbol.name << " "
-        << std::setw(type + 2) << token_name(symbol.type)
-        << ((symbol.type == INT) ? " " : "")
-        << ((symbol.token == VAR) ? "\t" + std::to_string(symbol.address) : "")
-        << std::setw(type + 2) << symbol.address << " "
-        << std::endl;
+        << i++ << " " << token_name(symbol.token) << "\t" << symbol.name << "\t"
+        << ((symbol.token == VAR) ? "\t" + std::to_string(symbol.address) : "") << std::endl;
   }
 }
