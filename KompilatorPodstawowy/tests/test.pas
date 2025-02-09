@@ -14,5 +14,7 @@ var a, b, result: integer;
 
 begin
   a:=1;
+  b:=2;
+  a:=b;
   write(a)
 end.

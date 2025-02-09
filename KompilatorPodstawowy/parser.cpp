@@ -1203,7 +1203,7 @@ yyreduce:
 
   case 20: /* factor: variable  */
 #line 96 "parser.y"
-             { yyval = symtable[yyvsp[0]].address; }
+             { yyval = yyvsp[0]; }
 #line 1208 "parser.cpp"
     break;
 

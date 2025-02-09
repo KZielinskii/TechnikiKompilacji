@@ -93,8 +93,8 @@ term:
     }
 
 factor:
-    variable { $$ = symtable[$1].address; }  // ID pobiera adres z tablicy symboli
-    | NUM { $$ = $1; }  // NUM to wartość, nie adres w tablicy symboli
+    variable { $$ = $1; }
+    | NUM { $$ = $1; }
     | '(' expression ')'
     ;
 
