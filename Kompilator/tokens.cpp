@@ -12,6 +12,18 @@ int getOperationToken(std::string yytext)
     return DIV;
   else if(yytext == "mod")
     return MOD;
+  else if (yytext == "<")
+    return LT;
+  else if (yytext == "<=")
+    return LE;
+  else if (yytext == ">")
+    return GT;
+  else if (yytext == ">=")
+    return GE;
+  else if (yytext == "=")
+    return EQ;
+  else if (yytext == "<>")
+    return NE;
 
   return -1;
 }

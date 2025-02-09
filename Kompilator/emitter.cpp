@@ -104,6 +104,63 @@ void gencode_realToInt(int index1, int index2) {
     asmCode.push_back(oss.str());
 }
 
+int gencode_relop(int op, int index1, int index2, int tempIndex) {
+    std::ostringstream oss;
+
+    std::string opType;
+    switch(op) {
+        case LT: opType = "lt.i"; break;
+        case LE: opType = "le.i"; break;
+        case GT: opType = "gt.i"; break;
+        case GE: opType = "ge.i"; break;
+        case EQ: opType = "eq.i"; break;
+        case NE: opType = "ne.i"; break;
+        default:
+            std::cerr << "Nieznany operator relacyjny!\n";
+            return -1;
+    }
+
+    oss << "\t" << opType << "\t" << machineOperand(index1) << "," << machineOperand(index2) << "," << machineOperand(tempIndex);
+    oss << "\t ; " << opType << " " << symbolicOperand(index1) << "," << symbolicOperand(index2) << "," << symbolicOperand(tempIndex);
+    asmCode.push_back(oss.str());
+    return tempIndex;
+}
+
+void gencode_if(int conditionIndex, int thenLabel, int elseLabel) {
+    std::ostringstream oss;
+
+    // Sprawdzenie warunku
+    oss << "\tje.i\t" << machineOperand(conditionIndex) << ",#0,#lab" << elseLabel;
+    oss << "\t ; je.i " << symbolicOperand(conditionIndex) << ", 0, lab" << elseLabel;
+    asmCode.push_back(oss.str());
+
+    // THEN blok
+    oss.str("");
+    oss << "lab" << thenLabel << ":";
+    asmCode.push_back(oss.str());
+}
+
+void gencode_else(int elseLabel, int endLabel) {
+    std::ostringstream oss;
+
+    // ELSE blok
+    oss << "\tjump.i\t#lab" << endLabel;
+    oss << "\t ; jump.i lab" << endLabel;
+    asmCode.push_back(oss.str());
+
+    oss.str("");
+    oss << "lab" << elseLabel << ":";
+    asmCode.push_back(oss.str());
+}
+
+void gencode_end_if(int endLabel) {
+    std::ostringstream oss;
+
+    // Koniec instrukcji warunkowej
+    oss << "lab" << endLabel << ":";
+    asmCode.push_back(oss.str());
+}
+
 
 
 void saveAsmCode(std::string filename) {
@@ -120,3 +177,5 @@ void saveAsmCode(std::string filename) {
 
     outFile.close();
 }
+
+//todo not factor w factor

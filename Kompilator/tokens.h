@@ -6,5 +6,11 @@ enum op
     SUB,
     MUL,
     DIV,
-    MOD
+    MOD,
+    LT,
+    LE,
+    GT,
+    GE,
+    EQ,
+    NE
 };

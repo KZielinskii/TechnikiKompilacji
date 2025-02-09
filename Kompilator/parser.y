@@ -3,6 +3,7 @@
 
 int errorno = 0;
 int tempCountAddress = 0;
+int labelCounter = 1;
 std::vector<int> listID;
 
 bool isType(int);
@@ -10,7 +11,7 @@ int yylex();
 void yyerror(const char* s);
 %}
 
-%token PROGRAM ID INT REAL VAR NUM LABEL PROC NONE BEG END ASSIGN ADDOP MULOP WRITE READ
+%token PROGRAM ID INT REAL VAR NUM LABEL PROC NONE BEG END ASSIGN ADDOP MULOP WRITE READ IF THEN ELSE WHILE DO RELOP
 
 %%
 
@@ -58,6 +59,21 @@ statement:
     variable ASSIGN expression { 
         gencode_mov($3, $1);
     }
+    | procedure_statement
+    | compound_statement
+    | IF expression THEN statement ELSE statement {
+        int thenLabel = newLabel();
+        int elseLabel = newLabel();
+        int endLabel = newLabel();
+        
+        gencode_if($2, thenLabel, elseLabel);  // Warunek i THEN
+        $$ = thenLabel;  // THEN blok
+        gencode_else(elseLabel, endLabel);  // ELSE blok
+        $$ = endLabel;
+        gencode_end_if(endLabel);  // Zakończenie
+    }
+
+    | WHILE expression DO statement
     | WRITE '(' variable ')' { 
         gencode_write($3);
     }
@@ -67,8 +83,15 @@ variable:
     ID
     ;
 
+procedure_statement:
+    ID
+    ;
+
 expression:
     simple_expression
+    | simple_expression RELOP simple_expression {
+    $$ = gencode_relop($2, $1, $3, newTemp(INT));
+    }
     ;
 
 simple_expression:
@@ -119,3 +142,8 @@ int getTempAddress(int size) {
     tempCountAddress+=size;
     return temp;
 }
+
+int newLabel() {
+    return labelCounter++;
+}
+
