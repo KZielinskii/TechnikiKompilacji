@@ -1,10 +1,9 @@
 program example(input, output);
-var x, y: integer;
-var g,h:real;
+var a, b, result: integer;
 
 begin
-read(x,y);
-h:=1.5;
-g:=x+y*h;
-write(g)
+  a:=1;
+  b:=5;
+  result:= a + (b * 12) / 2 div 1;
+  write(result)
 end.

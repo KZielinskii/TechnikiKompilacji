@@ -1216,8 +1216,14 @@ yyreduce:
 #line 1217 "parser.cpp"
     break;
 
+  case 22: /* factor: '(' expression ')'  */
+#line 101 "parser.y"
+                          { yyval = yyvsp[-1]; }
+#line 1223 "parser.cpp"
+    break;
 
-#line 1221 "parser.cpp"
+
+#line 1227 "parser.cpp"
 
       default: break;
     }

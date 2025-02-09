@@ -1,12 +1,11 @@
-	jump.i		#program	|	jump.i		program
-program:
-	read.i		0		|	read.i		x
-	read.i		4		|	read.i		y
-	mov.r		#1.5,16		|	mov.r		1.5,h
-	intoreal.i	4,24		|	inttoreal.i	y,$t0
-	mul.r		24,16,32	|	mul.r		$t0,h,$t1
-	intoreal.i	0,40		|	inttoreal.i	x,$t2
-	add.r		40,32,48	|	add.r		$t2,$t1,$t3
-	mov.r		48,8		|	mov.r		$t3,g
-	write.r		8		|	write.r		g
-	exit				|	exit
+jump.i #lab0	 ;jump.i  lab0
+lab0:
+	mov.i	#1,0	 ; mov.i 1,a
+	mov.i	#5,4	 ; mov.i 5,b
+	mul.i	4,#12,12	 ; mul.i b,12,t0
+	div.i	12,#2,16	 ; div.i t0,2,t1
+	div.i	16,#1,20	 ; div.i t1,1,t2
+	add.i	0,20,24	 ; add.i a,t2,t3
+	mov.i	24,8	 ; mov.i t3,result
+	write.i	8	 ; write.i result
+	exit	;exit

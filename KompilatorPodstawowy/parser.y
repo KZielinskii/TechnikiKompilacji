@@ -98,7 +98,7 @@ term:
 factor:
     variable { $$ = $1; }
     | NUM { $$ = $1; }
-    | '(' expression ')'
+    | '(' expression ')'  { $$ = $2; }
     ;
 
 %%
