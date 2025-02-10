@@ -61,18 +61,14 @@ statement:
     }
     | procedure_statement
     | compound_statement
-    | IF expression THEN statement ELSE statement {
-        int thenLabel = newLabel();
-        int elseLabel = newLabel();
-        int endLabel = newLabel();
+    | IF expression {
         
-        gencode_if($2, thenLabel, elseLabel);  // Warunek i THEN
-        $$ = thenLabel;  // THEN blok
-        gencode_else(elseLabel, endLabel);  // ELSE blok
-        $$ = endLabel;
-        gencode_end_if(endLabel);  // Zakończenie
-    }
 
+    }THEN statement ELSE statement {
+
+          int labelTrue  = newLabel();
+          
+      }
     | WHILE expression DO statement
     | WRITE '(' variable ')' { 
         gencode_write($3);

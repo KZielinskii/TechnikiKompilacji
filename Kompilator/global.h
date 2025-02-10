@@ -33,7 +33,4 @@ int gencode_op(std::string op, int index1, int index2);
 void gencode_intToReal(int index1, int index2);
 void gencode_realToInt(int index1, int index2);
 int gencode_relop(int op, int index1, int index2, int tempIndex);
-void gencode_if(int conditionIndex, int thenLabel, int elseLabel);
-void gencode_else(int elseLabel, int endLabel);
-void gencode_end_if(int endLabel);
-
+void gencode_label(int label);

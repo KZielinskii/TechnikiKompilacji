@@ -126,42 +126,11 @@ int gencode_relop(int op, int index1, int index2, int tempIndex) {
     return tempIndex;
 }
 
-void gencode_if(int conditionIndex, int thenLabel, int elseLabel) {
+void gencode_label(int label) {
     std::ostringstream oss;
-
-    // Sprawdzenie warunku
-    oss << "\tje.i\t" << machineOperand(conditionIndex) << ",#0,#lab" << elseLabel;
-    oss << "\t ; je.i " << symbolicOperand(conditionIndex) << ", 0, lab" << elseLabel;
-    asmCode.push_back(oss.str());
-
-    // THEN blok
-    oss.str("");
-    oss << "lab" << thenLabel << ":";
+    oss << "lab" << label << ":";
     asmCode.push_back(oss.str());
 }
-
-void gencode_else(int elseLabel, int endLabel) {
-    std::ostringstream oss;
-
-    // ELSE blok
-    oss << "\tjump.i\t#lab" << endLabel;
-    oss << "\t ; jump.i lab" << endLabel;
-    asmCode.push_back(oss.str());
-
-    oss.str("");
-    oss << "lab" << elseLabel << ":";
-    asmCode.push_back(oss.str());
-}
-
-void gencode_end_if(int endLabel) {
-    std::ostringstream oss;
-
-    // Koniec instrukcji warunkowej
-    oss << "lab" << endLabel << ":";
-    asmCode.push_back(oss.str());
-}
-
-
 
 void saveAsmCode(std::string filename) {
     std::ofstream outFile(filename);

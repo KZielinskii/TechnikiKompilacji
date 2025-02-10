@@ -11,6 +11,15 @@ begin
   if x = 1 then z:=y
   else z:=3;
 
+  if x <> 1 then z:=y
+  else z:=3;
+
+  if x > 1 then z:=y
+  else z:=3;
+
+  if x < 1 then z:=y
+  else z:=3;
+
   write(z)
 
 end.

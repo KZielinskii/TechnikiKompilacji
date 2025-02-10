@@ -29,7 +29,7 @@ Grammar
    11 statement: variable ASSIGN expression
    12          | procedure_statement
    13          | compound_statement
-   14          | IF variable RELOP simple_expression THEN statement ELSE statement
+   14          | IF expression THEN statement ELSE statement
    15          | WHILE expression DO statement
    16          | WRITE '(' variable ')'
 
@@ -82,7 +82,7 @@ Terminals, with rules where they appear
     ELSE (276) 14
     WHILE (277) 15
     DO (278) 15
-    RELOP (279) 14 20
+    RELOP (279) 20
 
 
 Nonterminals, with rules where they appear
@@ -112,16 +112,16 @@ Nonterminals, with rules where they appear
         on right: 9 10 14 15
     variable (39)
         on left: 17
-        on right: 11 14 16 25
+        on right: 11 16 25
     procedure_statement (40)
         on left: 18
         on right: 12
     expression (41)
         on left: 19 20
-        on right: 11 15 27
+        on right: 11 14 15 27
     simple_expression (42)
         on left: 21 22
-        on right: 14 19 20 22
+        on right: 19 20 22
     term (43)
         on left: 23 24
         on right: 21 22 24
@@ -293,11 +293,17 @@ State 18
 
 State 19
 
-   14 statement: IF • variable RELOP simple_expression THEN statement ELSE statement
+   14 statement: IF • expression THEN statement ELSE statement
 
-    ID  shift, and go to state 29
+    ID   shift, and go to state 29
+    NUM  shift, and go to state 30
+    '('  shift, and go to state 31
 
-    variable  go to state 30
+    variable           go to state 32
+    expression         go to state 33
+    simple_expression  go to state 34
+    term               go to state 35
+    factor             go to state 36
 
 
 State 20
@@ -305,14 +311,14 @@ State 20
    15 statement: WHILE • expression DO statement
 
     ID   shift, and go to state 29
-    NUM  shift, and go to state 31
-    '('  shift, and go to state 32
+    NUM  shift, and go to state 30
+    '('  shift, and go to state 31
 
-    variable           go to state 33
-    expression         go to state 34
-    simple_expression  go to state 35
-    term               go to state 36
-    factor             go to state 37
+    variable           go to state 32
+    expression         go to state 37
+    simple_expression  go to state 34
+    term               go to state 35
+    factor             go to state 36
 
 
 State 21
@@ -387,74 +393,74 @@ State 29
 
 State 30
 
-   14 statement: IF variable • RELOP simple_expression THEN statement ELSE statement
-
-    RELOP  shift, and go to state 45
-
-
-State 31
-
    26 factor: NUM •
 
     $default  reduce using rule 26 (factor)
 
 
-State 32
+State 31
 
    27 factor: '(' • expression ')'
 
     ID   shift, and go to state 29
-    NUM  shift, and go to state 31
-    '('  shift, and go to state 32
+    NUM  shift, and go to state 30
+    '('  shift, and go to state 31
 
-    variable           go to state 33
-    expression         go to state 46
-    simple_expression  go to state 35
-    term               go to state 36
-    factor             go to state 37
+    variable           go to state 32
+    expression         go to state 45
+    simple_expression  go to state 34
+    term               go to state 35
+    factor             go to state 36
 
 
-State 33
+State 32
 
    25 factor: variable •
 
     $default  reduce using rule 25 (factor)
 
 
+State 33
+
+   14 statement: IF expression • THEN statement ELSE statement
+
+    THEN  shift, and go to state 46
+
+
 State 34
-
-   15 statement: WHILE expression • DO statement
-
-    DO  shift, and go to state 47
-
-
-State 35
 
    19 expression: simple_expression •
    20           | simple_expression • RELOP simple_expression
    22 simple_expression: simple_expression • ADDOP term
 
-    ADDOP  shift, and go to state 48
-    RELOP  shift, and go to state 49
+    ADDOP  shift, and go to state 47
+    RELOP  shift, and go to state 48
 
     $default  reduce using rule 19 (expression)
 
 
-State 36
+State 35
 
    21 simple_expression: term •
    24 term: term • MULOP factor
 
-    MULOP  shift, and go to state 50
+    MULOP  shift, and go to state 49
 
     $default  reduce using rule 21 (simple_expression)
 
 
-State 37
+State 36
 
    23 term: factor •
 
     $default  reduce using rule 23 (term)
+
+
+State 37
+
+   15 statement: WHILE expression • DO statement
+
+    DO  shift, and go to state 50
 
 
 State 38
@@ -485,14 +491,14 @@ State 40
    11 statement: variable ASSIGN • expression
 
     ID   shift, and go to state 29
-    NUM  shift, and go to state 31
-    '('  shift, and go to state 32
+    NUM  shift, and go to state 30
+    '('  shift, and go to state 31
 
-    variable           go to state 33
+    variable           go to state 32
     expression         go to state 52
-    simple_expression  go to state 35
-    term               go to state 36
-    factor             go to state 37
+    simple_expression  go to state 34
+    term               go to state 35
+    factor             go to state 36
 
 
 State 41
@@ -525,26 +531,67 @@ State 44
 
 State 45
 
-   14 statement: IF variable RELOP • simple_expression THEN statement ELSE statement
+   27 factor: '(' expression • ')'
 
-    ID   shift, and go to state 29
-    NUM  shift, and go to state 31
-    '('  shift, and go to state 32
-
-    variable           go to state 33
-    simple_expression  go to state 55
-    term               go to state 36
-    factor             go to state 37
+    ')'  shift, and go to state 55
 
 
 State 46
 
-   27 factor: '(' expression • ')'
+   14 statement: IF expression THEN • statement ELSE statement
 
-    ')'  shift, and go to state 56
+    ID     shift, and go to state 17
+    BEG    shift, and go to state 14
+    WRITE  shift, and go to state 18
+    IF     shift, and go to state 19
+    WHILE  shift, and go to state 20
+
+    compound_statement   go to state 21
+    statement            go to state 56
+    variable             go to state 24
+    procedure_statement  go to state 25
 
 
 State 47
+
+   22 simple_expression: simple_expression ADDOP • term
+
+    ID   shift, and go to state 29
+    NUM  shift, and go to state 30
+    '('  shift, and go to state 31
+
+    variable  go to state 32
+    term      go to state 57
+    factor    go to state 36
+
+
+State 48
+
+   20 expression: simple_expression RELOP • simple_expression
+
+    ID   shift, and go to state 29
+    NUM  shift, and go to state 30
+    '('  shift, and go to state 31
+
+    variable           go to state 32
+    simple_expression  go to state 58
+    term               go to state 35
+    factor             go to state 36
+
+
+State 49
+
+   24 term: term MULOP • factor
+
+    ID   shift, and go to state 29
+    NUM  shift, and go to state 30
+    '('  shift, and go to state 31
+
+    variable  go to state 32
+    factor    go to state 59
+
+
+State 50
 
    15 statement: WHILE expression DO • statement
 
@@ -555,48 +602,9 @@ State 47
     WHILE  shift, and go to state 20
 
     compound_statement   go to state 21
-    statement            go to state 57
+    statement            go to state 60
     variable             go to state 24
     procedure_statement  go to state 25
-
-
-State 48
-
-   22 simple_expression: simple_expression ADDOP • term
-
-    ID   shift, and go to state 29
-    NUM  shift, and go to state 31
-    '('  shift, and go to state 32
-
-    variable  go to state 33
-    term      go to state 58
-    factor    go to state 37
-
-
-State 49
-
-   20 expression: simple_expression RELOP • simple_expression
-
-    ID   shift, and go to state 29
-    NUM  shift, and go to state 31
-    '('  shift, and go to state 32
-
-    variable           go to state 33
-    simple_expression  go to state 59
-    term               go to state 36
-    factor             go to state 37
-
-
-State 50
-
-   24 term: term MULOP • factor
-
-    ID   shift, and go to state 29
-    NUM  shift, and go to state 31
-    '('  shift, and go to state 32
-
-    variable  go to state 33
-    factor    go to state 60
 
 
 State 51
@@ -629,57 +637,55 @@ State 54
 
 State 55
 
-   14 statement: IF variable RELOP simple_expression • THEN statement ELSE statement
-   22 simple_expression: simple_expression • ADDOP term
-
-    ADDOP  shift, and go to state 48
-    THEN   shift, and go to state 61
-
-
-State 56
-
    27 factor: '(' expression ')' •
 
     $default  reduce using rule 27 (factor)
 
 
+State 56
+
+   14 statement: IF expression THEN statement • ELSE statement
+
+    ELSE  shift, and go to state 61
+
+
 State 57
-
-   15 statement: WHILE expression DO statement •
-
-    $default  reduce using rule 15 (statement)
-
-
-State 58
 
    22 simple_expression: simple_expression ADDOP term •
    24 term: term • MULOP factor
 
-    MULOP  shift, and go to state 50
+    MULOP  shift, and go to state 49
 
     $default  reduce using rule 22 (simple_expression)
 
 
-State 59
+State 58
 
    20 expression: simple_expression RELOP simple_expression •
    22 simple_expression: simple_expression • ADDOP term
 
-    ADDOP  shift, and go to state 48
+    ADDOP  shift, and go to state 47
 
     $default  reduce using rule 20 (expression)
 
 
-State 60
+State 59
 
    24 term: term MULOP factor •
 
     $default  reduce using rule 24 (term)
 
 
+State 60
+
+   15 statement: WHILE expression DO statement •
+
+    $default  reduce using rule 15 (statement)
+
+
 State 61
 
-   14 statement: IF variable RELOP simple_expression THEN • statement ELSE statement
+   14 statement: IF expression THEN statement ELSE • statement
 
     ID     shift, and go to state 17
     BEG    shift, and go to state 14
@@ -695,29 +701,6 @@ State 61
 
 State 62
 
-   14 statement: IF variable RELOP simple_expression THEN statement • ELSE statement
-
-    ELSE  shift, and go to state 63
-
-
-State 63
-
-   14 statement: IF variable RELOP simple_expression THEN statement ELSE • statement
-
-    ID     shift, and go to state 17
-    BEG    shift, and go to state 14
-    WRITE  shift, and go to state 18
-    IF     shift, and go to state 19
-    WHILE  shift, and go to state 20
-
-    compound_statement   go to state 21
-    statement            go to state 64
-    variable             go to state 24
-    procedure_statement  go to state 25
-
-
-State 64
-
-   14 statement: IF variable RELOP simple_expression THEN statement ELSE statement •
+   14 statement: IF expression THEN statement ELSE statement •
 
     $default  reduce using rule 14 (statement)

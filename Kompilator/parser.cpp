@@ -480,7 +480,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  4
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   61
+#define YYLAST   58
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  31
@@ -489,7 +489,7 @@ union yyalloc
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  28
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  65
+#define YYNSTATES  63
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   279
@@ -541,8 +541,8 @@ static const yytype_int8 yytranslate[] =
 static const yytype_uint8 yyrline[] =
 {
        0,    19,    19,    26,    27,    31,    41,    45,    46,    50,
-      54,    55,    59,    62,    63,    64,   140,   141,   147,   151,
-     155,   156,   162,   163,   174,   175,   188,   189,   190
+      54,    55,    59,    62,    63,    64,    89,    90,    96,   100,
+     104,   105,   111,   112,   123,   124,   137,   138,   139
 };
 #endif
 
@@ -574,7 +574,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-38)
+#define YYPACT_NINF (-39)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -588,13 +588,13 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      10,    19,    36,    12,   -38,    34,   -38,   -23,    13,    37,
-     -38,   -38,    20,    34,     0,    15,    -9,    28,    21,    40,
-       3,   -38,   -12,   -38,    31,   -38,   -38,    25,    40,   -38,
-      24,   -38,     3,   -38,    27,    -6,    35,   -38,   -38,     0,
-       3,   -38,   -38,    26,    29,     3,    30,     0,     3,     3,
-       3,   -38,   -38,   -38,   -38,    14,   -38,   -38,    35,    39,
-     -38,     0,    38,     0,   -38
+       2,    11,    17,    -4,   -39,    27,   -39,   -20,     7,    33,
+     -39,   -39,     4,    27,    16,    12,    -3,    25,    18,    -1,
+      -1,   -39,    -9,   -39,    28,   -39,   -39,    24,    37,   -39,
+     -39,    -1,   -39,    26,    -5,    29,   -39,    21,   -39,    16,
+      -1,   -39,   -39,    22,    30,    31,    16,    -1,    -1,    -1,
+      16,   -39,   -39,   -39,   -39,   -39,    32,    29,    35,   -39,
+     -39,    16,   -39
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -605,24 +605,24 @@ static const yytype_int8 yydefact[] =
        0,     0,     0,     0,     1,     0,     3,     0,     0,     0,
        6,     4,     0,     0,     0,     0,     0,    19,     0,     0,
        0,    14,     0,    10,     0,    13,     2,     0,     0,    18,
-       0,    27,     0,    26,     0,    20,    22,    24,     9,     0,
+      27,     0,    26,     0,    20,    22,    24,     0,     9,     0,
        0,     7,     8,     0,     0,     0,     0,     0,     0,     0,
-       0,    11,    12,     5,    17,     0,    28,    16,    23,    21,
-      25,     0,     0,     0,    15
+       0,    11,    12,     5,    17,    28,     0,    23,    21,    25,
+      16,     0,    15
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -38,   -38,    44,   -38,   -38,    46,   -38,   -37,   -14,   -38,
-     -24,   -10,     4,    11
+     -39,   -39,    38,   -39,   -39,    36,   -39,   -38,   -14,   -39,
+     -18,     6,     5,     9
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     2,     7,    12,    43,    21,    22,    23,    33,    25,
-      34,    35,    36,    37
+       0,     2,     7,    12,    43,    21,    22,    23,    32,    25,
+      33,    34,    35,    36
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -630,24 +630,22 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      24,    38,    51,     8,    17,    30,     9,    29,    46,    48,
-      57,    31,    14,     1,    44,    39,    52,    18,    49,    19,
-       9,    27,    20,     3,    62,    24,    64,    13,    32,    48,
-      41,    42,    14,    24,    61,    55,     4,     5,     6,    59,
-      10,    11,   -18,    26,    29,    40,    28,    24,    45,    24,
-      47,    50,    58,    53,    48,    54,    56,    16,    15,    63,
-       0,    60
+      24,    51,    37,    29,    38,     1,     8,    30,    56,     9,
+      47,    13,    60,    45,    44,     3,    14,     4,    39,    48,
+      17,     5,    52,    62,    31,    24,     9,    27,    14,    41,
+      42,     6,    24,    18,    10,    19,    24,    11,    20,   -18,
+      26,    29,    40,    28,    50,    49,    46,    24,    15,    53,
+      47,    16,    57,    61,    58,     0,    54,    55,    59
 };
 
 static const yytype_int8 yycheck[] =
 {
-      14,    13,    39,    26,     4,    19,    29,     4,    32,    15,
-      47,     8,    12,     3,    28,    27,    40,    17,    24,    19,
-      29,    30,    22,     4,    61,    39,    63,     7,    25,    15,
-       5,     6,    12,    47,    20,    45,     0,    25,     4,    49,
-      27,     4,    14,    28,     4,    14,    25,    61,    24,    63,
-      23,    16,    48,    27,    15,    26,    26,    13,    12,    21,
-      -1,    50
+      14,    39,    20,     4,    13,     3,    26,     8,    46,    29,
+      15,     7,    50,    31,    28,     4,    12,     0,    27,    24,
+       4,    25,    40,    61,    25,    39,    29,    30,    12,     5,
+       6,     4,    46,    17,    27,    19,    50,     4,    22,    14,
+      28,     4,    14,    25,    23,    16,    20,    61,    12,    27,
+      15,    13,    47,    21,    48,    -1,    26,    26,    49
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -657,10 +655,10 @@ static const yytype_int8 yystos[] =
        0,     3,    32,     4,     0,    25,     4,    33,    26,    29,
       27,     4,    34,     7,    12,    36,    33,     4,    17,    19,
       22,    36,    37,    38,    39,    40,    28,    30,    25,     4,
-      39,     8,    25,    39,    41,    42,    43,    44,    13,    27,
-      14,     5,     6,    35,    39,    24,    41,    23,    15,    24,
-      16,    38,    41,    27,    26,    42,    26,    38,    43,    42,
-      44,    20,    38,    21,    38
+       8,    25,    39,    41,    42,    43,    44,    41,    13,    27,
+      14,     5,     6,    35,    39,    41,    20,    15,    24,    16,
+      23,    38,    41,    27,    26,    26,    38,    43,    42,    44,
+      38,    21,    38
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
@@ -675,7 +673,7 @@ static const yytype_int8 yyr1[] =
 static const yytype_int8 yyr2[] =
 {
        0,     2,     9,     1,     3,     6,     0,     1,     1,     3,
-       1,     3,     3,     1,     1,     8,     4,     4,     1,     1,
+       1,     3,     3,     1,     1,     6,     4,     4,     1,     1,
        1,     3,     1,     3,     1,     3,     1,     1,     3
 };
 
@@ -1142,13 +1140,13 @@ yyreduce:
   case 3: /* identifier_list: ID  */
 #line 26 "parser.y"
        { listID.push_back(yyvsp[0]); }
-#line 1146 "parser.cpp"
+#line 1144 "parser.cpp"
     break;
 
   case 4: /* identifier_list: identifier_list ',' ID  */
 #line 27 "parser.y"
                              { listID.push_back(yyvsp[0]); }
-#line 1152 "parser.cpp"
+#line 1150 "parser.cpp"
     break;
 
   case 5: /* declarations: declarations VAR identifier_list ':' type ';'  */
@@ -1163,7 +1161,7 @@ yyreduce:
         }
         listID.clear();
     }
-#line 1167 "parser.cpp"
+#line 1165 "parser.cpp"
     break;
 
   case 12: /* statement: variable ASSIGN expression  */
@@ -1171,113 +1169,63 @@ yyreduce:
                                { 
         gencode_mov(yyvsp[0], yyvsp[-2]);
     }
-#line 1175 "parser.cpp"
+#line 1173 "parser.cpp"
     break;
 
-  case 15: /* statement: IF variable RELOP simple_expression THEN statement ELSE statement  */
+  case 15: /* statement: IF expression THEN statement ELSE statement  */
 #line 64 "parser.y"
-                                                                        {
-         /* Ustalanie etykiet – zgodnie z oczekiwanym kodem: */
-         int thenLabel = newLabel();   /* etykieta, do której skoczymy, gdy warunek jest spełniony */
-         int elseLabel = newLabel();   /* etykieta do której skoczymy po ustawieniu wyniku warunku */
-         int exitLabel = newLabel();   /* etykieta końca całej instrukcji IF */
-         int temp = newTemp(INT);       /* tymczasowa zmienna ($t0), do której zapiszemy wynik warunku */
-         
-         /* 1. Porównanie: je.i <x>,#1,#lab{thenLabel} – jeśli x == 1, skaczemy do bloku ustawiającego $t0=1 */
-         {
-           std::ostringstream oss;
-           oss << "\tje.i\t" << machineOperand(yyvsp[-6]) << ",#1,#lab" << thenLabel;
-           oss << "\t ; je.i " << symbolicOperand(yyvsp[-6]) << ", 1, lab" << thenLabel;
-           asmCode.push_back(oss.str());
-         }
-         /* 2. Jeśli porównanie NIE było prawdziwe – ustawiamy $t0 na 0 i skaczemy do etykiety else (lab2) */
-         {
-           std::ostringstream oss;
-           oss << "\tmov.i\t#0," << machineOperand(temp);
-           oss << "\t ; mov.i #0, " << symbolicOperand(temp);
-           asmCode.push_back(oss.str());
-         }
-         {
-           std::ostringstream oss;
-           oss << "\tjump.i\t#lab" << elseLabel;
-           oss << "\t ; jump.i lab" << elseLabel;
-           asmCode.push_back(oss.str());
-         }
-         /* 3. Blok then – etykieta lab{thenLabel}: ustaw $t0 na 1 */
-         {
-           std::ostringstream oss;
-           oss << "lab" << thenLabel << ":";
-           asmCode.push_back(oss.str());
-         }
-         {
-           std::ostringstream oss;
-           oss << "\tmov.i\t#1," << machineOperand(temp);
-           oss << "\t ; mov.i #1, " << symbolicOperand(temp);
-           asmCode.push_back(oss.str());
-         }
-         /* 4. Blok dalszy – etykieta lab{elseLabel}: */
-         {
-           std::ostringstream oss;
-           oss << "lab" << elseLabel << ":";
-           asmCode.push_back(oss.str());
-         }
-         /* 5. Na podstawie $t0 (temp) wykonujemy skok – jeśli $t0==0 (czyli warunek fałszywy) to przechodzimy do bloku ELSE */
-         int elsePartLabel = newLabel();
-         {
-           std::ostringstream oss;
-           oss << "\tje.i\t" << machineOperand(temp) << ",#0,#lab" << elsePartLabel;
-           oss << "\t ; je.i " << symbolicOperand(temp) << ", 0, lab" << elsePartLabel;
-           asmCode.push_back(oss.str());
-         }
-         /* 6. Kod bloku THEN – (tutaj zostanie wygenerowany kod przypisania z THEN, np. z: z:=y) */
-         /* Kod ten został wygenerowany przez akcję semantyczną w produkcji odpowiadającej THEN – więc po prostu kontynuujemy */
-         {
-           std::ostringstream oss;
-           oss << "\tjump.i\t#lab" << exitLabel;
-           oss << "\t ; jump.i lab" << exitLabel;
-           asmCode.push_back(oss.str());
-         }
-         /* 7. Blok ELSE – etykieta lab{elsePartLabel}: */
-         {
-           std::ostringstream oss;
-           oss << "lab" << elsePartLabel << ":";
-           asmCode.push_back(oss.str());
-         }
-         /* Kod bloku ELSE – również generowany przez akcję semantyczną ELSE */
-         /* 8. Koniec instrukcji IF – etykieta lab{exitLabel}: */
-         {
-           std::ostringstream oss;
-           oss << "lab" << exitLabel << ":";
-           asmCode.push_back(oss.str());
-         }
-    }
-#line 1255 "parser.cpp"
+                                                  {
+
+          int labelTrue  = newLabel();  // etykieta, gdy warunek spełniony
+          int labelTemp  = newLabel();  // łączenie ustawienia wartości tymczasowej
+          int labelFalse = newLabel();  // etykieta dla gałęzi else (używana przy sprawdzeniu tymczasowej)
+          int labelEnd   = newLabel();  // etykieta końca całej instrukcji if
+
+          gencode_relop_jump("je.i", yyvsp[-4], 1, labelTrue);
+          
+          gencode_mov_const(0, 12);
+          gencode_jump(labelTemp);
+
+          gencode_label(labelTrue);
+          gencode_mov_const(1, 12);
+
+          gencode_label(labelTemp);
+
+          gencode_if_temp(12, labelFalse);
+
+          gencode_jump(labelEnd);
+
+          gencode_label(labelFalse);
+      
+          gencode_label(labelEnd);
+      }
+#line 1203 "parser.cpp"
     break;
 
   case 17: /* statement: WRITE '(' variable ')'  */
-#line 141 "parser.y"
+#line 90 "parser.y"
                              { 
         gencode_write(yyvsp[-1]);
     }
-#line 1263 "parser.cpp"
+#line 1211 "parser.cpp"
     break;
 
   case 21: /* expression: simple_expression RELOP simple_expression  */
-#line 156 "parser.y"
+#line 105 "parser.y"
                                                 {
     yyval = gencode_relop(yyvsp[-1], yyvsp[-2], yyvsp[0], newTemp(INT));
     }
-#line 1271 "parser.cpp"
+#line 1219 "parser.cpp"
     break;
 
   case 22: /* simple_expression: term  */
-#line 162 "parser.y"
+#line 111 "parser.y"
          { yyval = yyvsp[0]; }
-#line 1277 "parser.cpp"
+#line 1225 "parser.cpp"
     break;
 
   case 23: /* simple_expression: simple_expression ADDOP term  */
-#line 163 "parser.y"
+#line 112 "parser.y"
                                    { 
         if (yyvsp[-1] == ADD) {
             yyval = gencode_op("add", yyvsp[-2], yyvsp[0]);
@@ -1286,17 +1234,17 @@ yyreduce:
             yyval = gencode_op("sub", yyvsp[-2], yyvsp[0]);
         }
     }
-#line 1290 "parser.cpp"
+#line 1238 "parser.cpp"
     break;
 
   case 24: /* term: factor  */
-#line 174 "parser.y"
+#line 123 "parser.y"
            { yyval = yyvsp[0]; }
-#line 1296 "parser.cpp"
+#line 1244 "parser.cpp"
     break;
 
   case 25: /* term: term MULOP factor  */
-#line 175 "parser.y"
+#line 124 "parser.y"
                         {
         if (yyvsp[-1] == MUL) {
             yyval = gencode_op("mul", yyvsp[-2], yyvsp[0]);
@@ -1308,29 +1256,29 @@ yyreduce:
             yyval = gencode_op("mod", yyvsp[-2], yyvsp[0]);
         }
     }
-#line 1312 "parser.cpp"
+#line 1260 "parser.cpp"
     break;
 
   case 26: /* factor: variable  */
-#line 188 "parser.y"
+#line 137 "parser.y"
              { yyval = yyvsp[0]; }
-#line 1318 "parser.cpp"
+#line 1266 "parser.cpp"
     break;
 
   case 27: /* factor: NUM  */
-#line 189 "parser.y"
+#line 138 "parser.y"
           { yyval = yyvsp[0]; }
-#line 1324 "parser.cpp"
+#line 1272 "parser.cpp"
     break;
 
   case 28: /* factor: '(' expression ')'  */
-#line 190 "parser.y"
+#line 139 "parser.y"
                           { yyval = yyvsp[-1]; }
-#line 1330 "parser.cpp"
+#line 1278 "parser.cpp"
     break;
 
 
-#line 1334 "parser.cpp"
+#line 1282 "parser.cpp"
 
       default: break;
     }
@@ -1523,7 +1471,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 193 "parser.y"
+#line 142 "parser.y"
 
 
 void yyerror(const char* s) {
