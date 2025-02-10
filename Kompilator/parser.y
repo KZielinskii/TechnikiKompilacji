@@ -3,7 +3,6 @@
 
 int errorno = 0;
 int tempCountAddress = 0;
-int labelCounter = 1;
 std::vector<int> listID;
 
 bool isType(int);
@@ -85,7 +84,7 @@ procedure_statement:
 expression:
     simple_expression
     | simple_expression RELOP simple_expression {
-        gencode_relop($2, $1, $3, newTemp(INT));
+        gencode_relop($2, $1, $3);
     }
     ;
 
@@ -137,8 +136,3 @@ int getTempAddress(int size) {
     tempCountAddress+=size;
     return temp;
 }
-
-int newLabel() {
-    return labelCounter++;
-}
-

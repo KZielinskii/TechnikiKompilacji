@@ -4,6 +4,7 @@
 #include <sstream>
 
 std::vector<std::string> asmCode;
+int labelCounter = 1;
 
 std::string machineOperand(int op) {   
     if (op >= (int)symtable.size()) {
@@ -38,11 +39,11 @@ std::string symbolicOperand(int op) {
 }
 
 std::string machineLabelOperand(int indexLabel) {
-    return "#lab"+indexLabel;
+    return "#lab"+std::to_string(indexLabel);
 }
 
 std::string symbolicLabelOperand(int indexLabel) {
-    return "lab"+indexLabel;
+    return "lab"+std::to_string(indexLabel);
 }
 
 void gencode_mov(int index1, int index2) {
@@ -112,7 +113,7 @@ void gencode_realToInt(int index1, int index2) {
     asmCode.push_back(oss.str());
 }
 
-void gencode_relop(int op, int index1, int index2, int indexLabel) {
+void gencode_relop(int op, int index1, int index2) {
     std::ostringstream oss;
 
     bool isReal = (symtable[index1].type == REAL);
@@ -130,8 +131,8 @@ void gencode_relop(int op, int index1, int index2, int indexLabel) {
             std::cout << "Nieznany operator relacyjny!\n";
     }
 
-    oss << "\t" << opType << "\t" << machineOperand(index1) << "," << machineOperand(index2) << "," << machineLabelOperand(indexLabel);
-    oss << "\t ; " << opType << " " << symbolicOperand(index1) << "," << symbolicOperand(index2) << "," << symbolicLabelOperand(indexLabel);
+    oss << "\t" << opType << "\t" << machineOperand(index1) << "," << machineOperand(index2) << "," << machineLabelOperand(1);
+    oss << "\t ; " << opType << " " << symbolicOperand(index1) << "," << symbolicOperand(index2) << "," << symbolicLabelOperand(1);
     asmCode.push_back(oss.str());
 }
 
@@ -144,6 +145,17 @@ void gencode_if() {
 void gencode_label(int label) {
     std::ostringstream oss;
     oss << "lab" << label << ":";
+    asmCode.push_back(oss.str());
+}
+
+int newLabel() {
+    return labelCounter++;
+}
+
+void gencode(std::string str1, std::string str2, std::string str3) {
+    std::ostringstream oss;
+   // oss << "\t" << opType << "\t" << machineOperand(index1) << "," << machineOperand(index2) << "," << machineLabelOperand(indexLabel);
+//oss << "\t ; " << opType << " " << symbolicOperand(index1) << "," << symbolicOperand(index2) << "," << symbolicLabelOperand(indexLabel);
     asmCode.push_back(oss.str());
 }
 
