@@ -10,6 +10,7 @@ enum op
     OR,
     AND,
     E,
+    NE,
     LE,
     GE,
     G,
