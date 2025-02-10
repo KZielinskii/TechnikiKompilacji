@@ -1,7 +1,8 @@
 #include "global.h"
 
 std::vector<symbol_t> symtable;
-int coutTemp = 0;
+int tempCounter = 0;
+int labelCounter = 1;
 
 void initSymtable()
 {
@@ -38,14 +39,24 @@ int insert(std::string name, int token, int type) {
 
 int newTemp(int type) {
     symbol_t newSymbol;
-    newSymbol.name = "t"+ std::to_string(coutTemp);
+    newSymbol.name = "t"+ std::to_string(tempCounter);
     newSymbol.token = VAR;
     newSymbol.type = type;
     newSymbol.address = getTempAddress((type == INT) ? 4 : 8);
-    coutTemp++;
+    tempCounter++;
 
     symtable.push_back(newSymbol);
     return symtable.size() - 1;
+}
+
+int newLabel() { 
+  symbol_t newSymbol;
+  newSymbol.name = "lab"+ std::to_string(labelCounter);
+  newSymbol.token = LABEL;
+  labelCounter++;
+
+  symtable.push_back(newSymbol);
+  return symtable.size() - 1;
 }
 
 bool isReal(int index) {

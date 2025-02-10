@@ -84,7 +84,7 @@ procedure_statement:
 expression:
     simple_expression
     | simple_expression RELOP simple_expression {
-        gencode_relop($2, $1, $3);
+       $$ = gencode_relop($2, $1, $3);
     }
     ;
 

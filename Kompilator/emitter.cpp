@@ -4,7 +4,6 @@
 #include <sstream>
 
 std::vector<std::string> asmCode;
-int labelCounter = 1;
 
 std::string machineOperand(int op) {   
     if (op >= (int)symtable.size()) {
@@ -13,7 +12,7 @@ std::string machineOperand(int op) {
     }
     symbol_t sym = symtable.at(op);
     
-    if(sym.token==NUM) {
+    if(sym.token==NUM || sym.token==LABEL) {
         return ("#" + sym.name);
     }
     if(sym.token==VAR) {
@@ -28,7 +27,7 @@ std::string symbolicOperand(int op) {
         return std::to_string(-1);
     }
     symbol_t sym = symtable.at(op);
-    if(sym.token==NUM) {
+    if(sym.token==NUM || sym.token==LABEL) {
         return sym.name;
     }
     if(sym.token==VAR) {
@@ -38,17 +37,24 @@ std::string symbolicOperand(int op) {
     return std::to_string(-1);
 }
 
-std::string machineLabelOperand(int indexLabel) {
-    return "#lab"+std::to_string(indexLabel);
-}
+void gencode(std::string m, int index1, int index2, int index3) { // index = -1 jeżeli nie ma być wypisany
+    std::ostringstream oss;
+    oss << "\t" << m << "\t" << machineOperand(index1); 
+    if(index2!=-1)
+    oss << "," << machineOperand(index2); 
+    if(index3!=-1)
+    oss << "," << machineOperand(index3);
 
-std::string symbolicLabelOperand(int indexLabel) {
-    return "lab"+std::to_string(indexLabel);
+
+    oss << "\t ; " << m << " " << symbolicOperand(index1);
+    if(index2!=-1)
+    oss << "," << symbolicOperand(index2);
+    if(index3!=-1)
+    oss << "," << symbolicOperand(index3);
+    asmCode.push_back(oss.str());
 }
 
 void gencode_mov(int index1, int index2) {
-    std::ostringstream oss;
-
     if(symtable[index1].type != symtable[index2].type) {
         int tempIndex = newTemp(symtable[index2].type);
         if(symtable[index2].type == INT) {
@@ -60,22 +66,17 @@ void gencode_mov(int index1, int index2) {
     }
 
     std::string movType = (symtable[index2].type == REAL) ? "mov.r" : "mov.i";
-    oss << "\t" << movType << "\t" << machineOperand(index1) << "," << machineOperand(index2);
-    oss << "\t ; " << movType << " " << symbolicOperand(index1) << "," << symbolicOperand(index2);
-    asmCode.push_back(oss.str());
+    
+    gencode(movType, index1, index2, -1);
 }
 
 void gencode_write(int index) {
-    std::ostringstream oss;
     std::string writeType = (symtable[index].type == REAL) ? "write.r" : "write.i";
 
-    oss << "\t" << writeType << "\t" << machineOperand(index);
-    oss << "\t ; " << writeType << " " << symbolicOperand(index);
-    asmCode.push_back(oss.str());
+    gencode(writeType, index, -1, -1);
 }
 
 int gencode_op(std::string op, int index1, int index2) {
-    std::ostringstream oss;
     bool isReal = (symtable[index1].type == REAL || symtable[index2].type == REAL);
     
     if (symtable[index1].type != symtable[index2].type) {
@@ -91,30 +92,22 @@ int gencode_op(std::string op, int index1, int index2) {
     
     int index3 = newTemp(isReal ? REAL : INT);
     op += (isReal ? ".r" : ".i");
-    
-    oss << "\t" << op << "\t" << machineOperand(index1) << "," << machineOperand(index2) << "," << machineOperand(index3);
-    oss << "\t ; " << op << " " << symbolicOperand(index1) << "," << symbolicOperand(index2) << "," << symbolicOperand(index3);
-    asmCode.push_back(oss.str());
-    
+
+    gencode(op, index1, index2, index3);
     return index3;
 }
 
 void gencode_intToReal(int index1, int index2) {
-    std::ostringstream oss;
-    oss << "\tinttoreal.i\t" << machineOperand(index1) << "," << machineOperand(index2);
-    oss << "\t ; inttoreal.i " << symbolicOperand(index1) << "," << symbolicOperand(index2);
-    asmCode.push_back(oss.str());
+   
+    gencode("inttoreal.i", index1, index2, -1);
 }
 
 void gencode_realToInt(int index1, int index2) {
-    std::ostringstream oss;
-    oss << "\trealtoint.r\t" << machineOperand(index1) << "," << machineOperand(index2);
-    oss << "\t ; realtoint.r " << symbolicOperand(index1) << "," << symbolicOperand(index2);
-    asmCode.push_back(oss.str());
+
+    gencode("trealtoint.r", index1, index2, -1);
 }
 
-void gencode_relop(int op, int index1, int index2) {
-    std::ostringstream oss;
+int gencode_relop(int op, int index1, int index2) {
 
     bool isReal = (symtable[index1].type == REAL);
     std::string endType = (isReal ? "r" : "i");
@@ -129,40 +122,24 @@ void gencode_relop(int op, int index1, int index2) {
         case L: opType = "jl." + endType; break;
         default:
             std::cout << "Nieznany operator relacyjny!\n";
+            return -1;
     }
 
-    oss << "\t" << opType << "\t" << machineOperand(index1) << "," << machineOperand(index2) << "," << machineLabelOperand(1);
-    oss << "\t ; " << opType << " " << symbolicOperand(index1) << "," << symbolicOperand(index2) << "," << symbolicLabelOperand(1);
-    asmCode.push_back(oss.str());
+    int indexLabel = newLabel();
+    gencode(opType, index1, index2, indexLabel);
+
+    return indexLabel;
 }
 
 void gencode_if() {
-    std::ostringstream oss;
-
-    asmCode.push_back(oss.str());
+    //todo
 }
 
-void gencode_label(int label) {
-    std::ostringstream oss;
-    oss << "lab" << label << ":";
-    asmCode.push_back(oss.str());
-}
-
-int newLabel() {
-    return labelCounter++;
-}
-
-void gencode(std::string str1, std::string str2, std::string str3) {
-    std::ostringstream oss;
-   // oss << "\t" << opType << "\t" << machineOperand(index1) << "," << machineOperand(index2) << "," << machineLabelOperand(indexLabel);
-//oss << "\t ; " << opType << " " << symbolicOperand(index1) << "," << symbolicOperand(index2) << "," << symbolicLabelOperand(indexLabel);
-    asmCode.push_back(oss.str());
-}
 
 void saveAsmCode(std::string filename) {
     std::ofstream outFile(filename);
     
-    outFile << "jump.i #lab0\t ;jump.i  lab0\n";
+    outFile << "\tjump.i #lab0\t ;jump.i  lab0\n";
     outFile << "lab0:\n";
 
     for (const auto& line : asmCode) {

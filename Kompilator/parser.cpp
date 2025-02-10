@@ -1201,7 +1201,7 @@ yyreduce:
   case 22: /* expression: simple_expression RELOP simple_expression  */
 #line 86 "parser.y"
                                                 {
-        gencode_relop(yyvsp[-1], yyvsp[-2], yyvsp[0]);
+       yyval = gencode_relop(yyvsp[-1], yyvsp[-2], yyvsp[0]);
     }
 #line 1207 "parser.cpp"
     break;
