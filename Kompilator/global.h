@@ -32,5 +32,5 @@ void gencode_write(int index);
 int gencode_op(std::string op, int index1, int index2);
 void gencode_intToReal(int index1, int index2);
 void gencode_realToInt(int index1, int index2);
-int gencode_relop(int op, int index1, int index2, int tempIndex);
+void gencode_relop(int op, int index1, int index2, int tempIndex);
 void gencode_label(int label);
