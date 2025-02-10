@@ -7,7 +7,7 @@ enum op
     MUL,
     DIV,
     MOD,
-    OR,
+    OR_,
     AND,
     E,
     NE,
