@@ -7,10 +7,11 @@ enum op
     MUL,
     DIV,
     MOD,
-    LT,
+    OR,
+    AND,
+    E,
     LE,
-    GT,
     GE,
-    EQ,
-    NE
+    G,
+    L
 };

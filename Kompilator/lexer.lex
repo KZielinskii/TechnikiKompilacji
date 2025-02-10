@@ -19,7 +19,7 @@ relop       "<"|"<="|">"|">="|"="|"<>"
 
 %%
 \n          lineno++;
-[ \t]       {}
+[\t]       {}
 
 program     {return PROGRAM;}
 begin       {return BEG;}
