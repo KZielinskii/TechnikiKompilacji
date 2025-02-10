@@ -37,6 +37,14 @@ std::string symbolicOperand(int op) {
     return std::to_string(-1);
 }
 
+std::string machineLabelOperand(int indexLabel) {
+    return "#lab"+indexLabel;
+}
+
+std::string symbolicLabelOperand(int indexLabel) {
+    return "lab"+indexLabel;
+}
+
 void gencode_mov(int index1, int index2) {
     std::ostringstream oss;
 
@@ -104,26 +112,33 @@ void gencode_realToInt(int index1, int index2) {
     asmCode.push_back(oss.str());
 }
 
-int gencode_relop(int op, int index1, int index2, int tempIndex) {
+void gencode_relop(int op, int index1, int index2, int indexLabel) {
     std::ostringstream oss;
+
+    bool isReal = (symtable[index1].type == REAL);
+    std::string endType = (isReal ? "r" : "i");
 
     std::string opType;
     switch(op) {
-        case LT: opType = "lt.i"; break;
-        case LE: opType = "le.i"; break;
-        case GT: opType = "gt.i"; break;
-        case GE: opType = "ge.i"; break;
-        case EQ: opType = "eq.i"; break;
-        case NE: opType = "ne.i"; break;
+        case E: opType = "je." + endType; break;
+        case NE: opType = "jne." + endType; break;
+        case LE: opType = "jle." + endType; break;
+        case GE: opType = "jge." + endType; break;
+        case G: opType = "jg." + endType; break;
+        case L: opType = "jl." + endType; break;
         default:
-            std::cerr << "Nieznany operator relacyjny!\n";
-            return -1;
+            std::cout << "Nieznany operator relacyjny!\n";
     }
 
-    oss << "\t" << opType << "\t" << machineOperand(index1) << "," << machineOperand(index2) << "," << machineOperand(tempIndex);
-    oss << "\t ; " << opType << " " << symbolicOperand(index1) << "," << symbolicOperand(index2) << "," << symbolicOperand(tempIndex);
+    oss << "\t" << opType << "\t" << machineOperand(index1) << "," << machineOperand(index2) << "," << machineLabelOperand(indexLabel);
+    oss << "\t ; " << opType << " " << symbolicOperand(index1) << "," << symbolicOperand(index2) << "," << symbolicLabelOperand(indexLabel);
     asmCode.push_back(oss.str());
-    return tempIndex;
+}
+
+void gencode_if() {
+    std::ostringstream oss;
+
+    asmCode.push_back(oss.str());
 }
 
 void gencode_label(int label) {
