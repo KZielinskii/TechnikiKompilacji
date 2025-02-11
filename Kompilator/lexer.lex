@@ -46,5 +46,6 @@ real        {yylval = REAL; return REAL;}
 {integer}   {yylval = insert(yytext, NUM, INT); return NUM;}
 {real}      {yylval = insert(yytext, NUM, REAL); return NUM;}
 {id}        {yylval = insert(yytext, ID, NONE); return ID;}
+\{[^}]*\}    {}
 .           {return *yytext;}
 %%

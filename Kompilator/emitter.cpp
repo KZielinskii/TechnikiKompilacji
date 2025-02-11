@@ -169,7 +169,24 @@ int gencode_else(int index1) {
     return newLabelIndex;
 }
 
-void gencode_endif(){};
+int gencode_while() {
+    int newLabelIndex = newLabel();
+    gencode_label(newLabelIndex);
+    return newLabelIndex;
+}
+
+//index1 temp sworzonego w if index2 label do którego skok z while
+int gencode_while_then(int index1, int index2) {
+    int newNumberIndex = newNumber(0);
+    gencode("je.i", index1, newNumberIndex, index2);
+    return index2;
+}
+
+// index1 label do którego skok kiedy niespełnion index2 label spełniono
+void gencode_end_while(int index1, int index2) {
+    gencode("jump.i", index2, -1, -1);
+    gencode_label(index1);
+}
 
 
 void saveAsmCode(std::string filename) {
