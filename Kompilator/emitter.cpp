@@ -207,6 +207,15 @@ int gencode_not(int index) {
     return gencode_if(newIndexLabel);
 }
 
+//index operanda przed którym jest -
+int gencode_sign(int index) {
+    int newIndexTemp = newTemp(symtable[index].type);
+    int newIndexNumber = newNumber(0);
+    std::string type = (symtable[index].type == REAL ? "sub.r" : "sub.i");
+    gencode(type, newIndexNumber, index, newIndexTemp);
+    return newIndexTemp;
+}
+
 
 void saveAsmCode(std::string filename) {
     std::ofstream outFile(filename);

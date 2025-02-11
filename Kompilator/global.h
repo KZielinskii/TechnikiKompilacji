@@ -44,3 +44,4 @@ int gencode_while();
 int gencode_while_then(int index1, int index2);
 void gencode_end_while(int index1, int index2);
 int gencode_not(int index);
+int gencode_sign(int index);

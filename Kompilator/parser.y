@@ -114,6 +114,13 @@ expression:
 
 simple_expression:
     term { $$ = $1; }
+    | ADDOP term {
+        if ($1 == SUB) {
+            $$ = gencode_sign($2);
+        } else {
+            $$ = $2;
+        }
+    }
     | simple_expression ADDOP term { 
         if ($2 == ADD) {
             $$ = gencode_op("add", $1, $3);
