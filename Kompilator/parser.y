@@ -37,17 +37,24 @@ declarations:
         }
         listID.clear();
     }
-    | /* empty */
+    | //empty
     ;
 
 type:
+    standerd_type
+
+standerd_type:
     INT
     | REAL
     ;
 
 compound_statement:
-    BEG statement_list END
+    BEG optional_statments END
     ;
+
+optional_statments:
+    statement_list
+    | //empty
 
 statement_list:
     statement

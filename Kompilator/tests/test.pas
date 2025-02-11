@@ -1,12 +1,10 @@
 program example(input, output);
-
 var x, y: integer;
+var g,h:real;
 
 begin
-
-  x:= -1;
-  y:= 1;
-
-  write(x)
-
+read(x,y);
+h:=1.5;
+g:=x+y*h;
+write(g)
 end.
