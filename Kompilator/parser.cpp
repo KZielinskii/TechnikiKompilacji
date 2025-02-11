@@ -1242,7 +1242,7 @@ yyreduce:
   case 22: /* statement: @4 WHILE @5 expression DO @6 statement  */
 #line 83 "parser.y"
                 {
-       gencode_end_while(yyvsp[-6] ,yyvsp[-5]);
+       gencode_end_while(yyvsp[-6] ,yyvsp[-4]);
     }
 #line 1248 "parser.cpp"
     break;

@@ -81,7 +81,7 @@ statement:
         $$ = gencode_while_then(temp,$1);
         
     } statement {
-       gencode_end_while($1 ,$2);
+       gencode_end_while($1 ,$3);
     }
     | WRITE '(' variable ')' { 
         gencode_write($3);

@@ -8,8 +8,12 @@ begin
   y:=2;
 
   while x < 5 
-  do x:=x+1;
+  do
+  begin 
+  x:=x+1;
+  y:=y*2
+  end;
 
-  write(x)
+  write(y)
 
 end.
