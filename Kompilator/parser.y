@@ -10,7 +10,7 @@ int yylex();
 void yyerror(const char* s);
 %}
 
-%token PROGRAM ID INT REAL VAR NUM LABEL PROC NONE BEG END ASSIGN ADDOP MULOP WRITE READ
+%token PROGRAM ID INT REAL VAR NUM LABEL PROC NONE BEG END ASSIGN ADDOP MULOP WRITE READ IF THEN ELSE WHILE DO RELOP
 
 %%
 
@@ -58,6 +58,20 @@ statement:
     variable ASSIGN expression { 
         gencode_mov($3, $1);
     }
+    | procedure_statement
+    | compound_statement
+    | IF expression {
+       $$ = gencode_if($2);
+    } THEN {
+       $$ = gencode_then($3);
+    } 
+    statement ELSE {
+       $$ = gencode_else($5);
+    } 
+    statement {
+        gencode_label($8);
+    }
+    | WHILE expression DO statement
     | WRITE '(' variable ')' { 
         gencode_write($3);
     }
@@ -67,8 +81,15 @@ variable:
     ID
     ;
 
+procedure_statement:
+    ID
+    ;
+
 expression:
     simple_expression
+    | simple_expression RELOP simple_expression {
+       $$ = gencode_relop($2, $1, $3);
+    }
     ;
 
 simple_expression:

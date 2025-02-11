@@ -1,12 +1,21 @@
 program example(input, output);
-var a, b: integer;
-var c, d: real;
+
+var x, y: integer;
+var z: real;
 
 begin
-  a:=3;
-  b:=12;
-  c:=16.15;
-  d:=4.25;
-  b:=a+c-d+b;
-  write(b)
+
+  x:=1;
+  y:=2;
+
+  if x = 1 then 
+  begin
+  z:=y+1;
+  z:=z*2
+  end
+  else z:=3;
+
+
+  write(z)
+
 end.

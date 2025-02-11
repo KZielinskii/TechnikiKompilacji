@@ -69,7 +69,13 @@ extern int yydebug;
     ADDOP = 270,                   /* ADDOP  */
     MULOP = 271,                   /* MULOP  */
     WRITE = 272,                   /* WRITE  */
-    READ = 273                     /* READ  */
+    READ = 273,                    /* READ  */
+    IF = 274,                      /* IF  */
+    THEN = 275,                    /* THEN  */
+    ELSE = 276,                    /* ELSE  */
+    WHILE = 277,                   /* WHILE  */
+    DO = 278,                      /* DO  */
+    RELOP = 279                    /* RELOP  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
