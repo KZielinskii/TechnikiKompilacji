@@ -83,8 +83,17 @@ statement:
     } statement {
        gencode_end_while($1 ,$3);
     }
-    | WRITE '(' variable ')' { 
-        gencode_write($3);
+    | READ '(' identifier_list ')' { 
+        for (auto id : listID) {
+            gencode_read(id);
+        }
+        listID.clear();
+    }
+    | WRITE '(' identifier_list ')' { 
+        for (auto id : listID) {
+            gencode_write(id);
+        }
+        listID.clear();
     }
     ;
 

@@ -7,13 +7,8 @@ begin
   x:=1;
   y:=2;
 
-  while x < 5 
-  do
-  begin 
-  x:=x+1;
-  y:=y*2
-  end;
+  read(x,y);
 
-  write(y)
+  write(x)
 
 end.

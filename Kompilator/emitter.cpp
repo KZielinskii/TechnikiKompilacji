@@ -77,6 +77,11 @@ void gencode_write(int index) {
     gencode(writeType, index, -1, -1);
 }
 
+void gencode_read(int index) {
+    std::string writeType = (symtable[index].type == REAL) ? "read.r" : "read.i";
+    gencode(writeType, index, -1, -1);
+}
+
 int gencode_op(std::string op, int index1, int index2) {
     bool isReal = (symtable[index1].type == REAL || symtable[index2].type == REAL);
     
