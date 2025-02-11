@@ -1,14 +1,12 @@
 program example(input, output);
 
-var x, y: integer;
+var x, y: real;
 
 begin
 
-  x:=1;
-  y:=2;
+  x:=1.12;
+  y:= not x;
 
-  read(x,y);
-
-  write(x)
+  write(y)
 
 end.

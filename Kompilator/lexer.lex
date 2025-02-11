@@ -33,6 +33,7 @@ then        {return THEN;}
 else        {return ELSE;}
 while       {return WHILE;}
 do          {return DO;}
+not         {return NOT;}
 
 var         {return VAR;}
 integer     {yylval = INT; return INT;}

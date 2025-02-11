@@ -110,7 +110,7 @@ void gencode_intToReal(int index1, int index2) {
 
 void gencode_realToInt(int index1, int index2) {
 
-    gencode("trealtoint.r", index1, index2, -1);
+    gencode("realtoint.r", index1, index2, -1);
 }
 
 int gencode_relop(int op, int index1, int index2) {
@@ -193,6 +193,20 @@ void gencode_end_while(int index1, int index2) {
     gencode_label(index1);
 }
 
+// index operanda do not'owania
+int gencode_not(int index) {
+    int indexToNot = index;
+    if(symtable[index].type == REAL) {
+        int newIndexTemp = newTemp(INT);
+        gencode_realToInt(index, newIndexTemp);
+        indexToNot = newIndexTemp;
+    }
+    int newIndexLabel = newLabel();
+    int newIndexNumber = newNumber(0);
+    gencode("je.i", indexToNot, newIndexNumber, newIndexLabel);
+    return gencode_if(newIndexLabel);
+}
+
 
 void saveAsmCode(std::string filename) {
     std::ofstream outFile(filename);
@@ -209,4 +223,3 @@ void saveAsmCode(std::string filename) {
     outFile.close();
 }
 
-//todo not factor w factor

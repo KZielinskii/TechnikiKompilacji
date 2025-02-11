@@ -10,7 +10,7 @@ int yylex();
 void yyerror(const char* s);
 %}
 
-%token PROGRAM ID INT REAL VAR NUM LABEL PROC NONE BEG END ASSIGN ADDOP MULOP WRITE READ IF THEN ELSE WHILE DO RELOP
+%token PROGRAM ID INT REAL VAR NUM LABEL PROC NONE BEG END ASSIGN ADDOP MULOP WRITE READ IF THEN ELSE WHILE DO RELOP NOT
 
 %%
 
@@ -142,6 +142,9 @@ factor:
     variable { $$ = $1; }
     | NUM { $$ = $1; }
     | '(' expression ')'  { $$ = $2; }
+    | NOT factor {
+       $$ = gencode_not($2);
+    }
     ;
 
 %%
