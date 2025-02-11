@@ -50,19 +50,27 @@ int newTemp(int type) {
 }
 
 int newLabel() { 
-  symbol_t newSymbol;
-  newSymbol.name = "lab"+ std::to_string(labelCounter);
-  newSymbol.token = LABEL;
-  labelCounter++;
+    symbol_t newSymbol;
+    newSymbol.name = "lab"+ std::to_string(labelCounter);
+    newSymbol.token = LABEL;
+    labelCounter++;
 
   symtable.push_back(newSymbol);
   return symtable.size() - 1;
 }
 
+int newNumber(int number) {
+    symbol_t newSymbol;
+    newSymbol.name = std::to_string(number);
+    newSymbol.token = NUM;
+
+    symtable.push_back(newSymbol);
+    return symtable.size() - 1;
+}
+
 bool isReal(int index) {
   return symtable[index].type == REAL;
 }
-
 
 void printSymtable()
 {

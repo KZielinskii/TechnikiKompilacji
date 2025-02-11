@@ -12,13 +12,10 @@ std::string machineOperand(int op) {
     }
     symbol_t sym = symtable.at(op);
     
-    if(sym.token==NUM || sym.token==LABEL) {
-        return ("#" + sym.name);
-    }
     if(sym.token==VAR) {
         return std::to_string(sym.address);
     }
-    return std::to_string(-1);
+    return ("#" + sym.name);
 }
 
 
@@ -27,14 +24,12 @@ std::string symbolicOperand(int op) {
         return std::to_string(-1);
     }
     symbol_t sym = symtable.at(op);
-    if(sym.token==NUM || sym.token==LABEL) {
-        return sym.name;
-    }
+
     if(sym.token==VAR) {
         return sym.name;
     }
     
-    return std::to_string(-1);
+    return sym.name;
 }
 
 void gencode(std::string m, int index1, int index2, int index3) { // index = -1 jeżeli nie ma być wypisany
@@ -51,6 +46,12 @@ void gencode(std::string m, int index1, int index2, int index3) { // index = -1 
     oss << "," << symbolicOperand(index2);
     if(index3!=-1)
     oss << "," << symbolicOperand(index3);
+    asmCode.push_back(oss.str());
+}
+
+void gencode_label(int index) {
+    std::ostringstream oss;
+    oss << symtable[index].name << ":";
     asmCode.push_back(oss.str());
 }
 
@@ -131,9 +132,44 @@ int gencode_relop(int op, int index1, int index2) {
     return indexLabel;
 }
 
-void gencode_if() {
-    //todo
+// index label stworzonego w relop
+int gencode_if(int index1) {
+    int newTempIndex = newTemp(INT); //int bo ma przechować 0 lub 1 jeśli jest prawdziwe
+    int newNumberIndex = newNumber(0);
+
+    gencode("mov.i", newNumberIndex, newTempIndex,-1);
+
+    int newLabelIndex = newLabel();
+    gencode("jump.i", newLabelIndex, -1, -1);
+    gencode_label(index1);
+
+    newNumberIndex = newNumber(1);
+    gencode("mov.i", newNumberIndex, newTempIndex,-1);
+    gencode_label(newLabelIndex);
+
+    return newTempIndex;
 }
+
+// index temp sworzonego w if
+int gencode_then(int index1) {
+    int newNumberIndex = newNumber(0);
+    int newLabelIndex = newLabel();
+
+    gencode("je.i", index1, newNumberIndex, newLabelIndex);
+
+    return newLabelIndex;
+}
+
+//index label sworzonego w then
+int gencode_else(int index1) {
+    int newLabelIndex = newLabel();
+    gencode("jump.i", newLabelIndex, -1, -1);
+
+    gencode_label(index1);
+    return newLabelIndex;
+}
+
+void gencode_endif(){};
 
 
 void saveAsmCode(std::string filename) {

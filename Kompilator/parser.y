@@ -61,12 +61,16 @@ statement:
     | procedure_statement
     | compound_statement
     | IF expression {
-        
-
-    }THEN statement ELSE statement {
-
-          
-      }
+       $$ = gencode_if($2);
+    } THEN {
+       $$ = gencode_then($3);
+    } 
+    statement ELSE {
+       $$ = gencode_else($5);
+    } 
+    statement {
+        gencode_label($8);
+    }
     | WHILE expression DO statement
     | WRITE '(' variable ')' { 
         gencode_write($3);
