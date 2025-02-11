@@ -71,7 +71,18 @@ statement:
     statement {
         gencode_label($8);
     }
-    | WHILE expression DO statement
+    | {
+        $$ = newLabel();
+    }WHILE {
+        $$ = gencode_while();
+    }
+    expression DO {
+        int temp = gencode_if($4);
+        $$ = gencode_while_then(temp,$1);
+        
+    } statement {
+       gencode_end_while($1 ,$3);
+    }
     | WRITE '(' variable ')' { 
         gencode_write($3);
     }
