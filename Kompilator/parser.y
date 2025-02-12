@@ -10,13 +10,14 @@ int yylex();
 void yyerror(const char* s);
 %}
 
-%token PROGRAM ID INT REAL VAR NUM LABEL PROC NONE BEG END ASSIGN ADDOP MULOP WRITE READ IF THEN ELSE WHILE DO RELOP NOT
+%token PROGRAM ID INT REAL VAR NUM LABEL PROC NONE BEG END ASSIGN ADDOP MULOP WRITE READ IF THEN ELSE WHILE DO RELOP NOT FUNCTION PROCEDURE
 
 %%
 
 program:
     PROGRAM ID '(' identifier_list ')' ';'
     declarations 
+    subprogram_declarations
     compound_statement 
     '.'
     ;
@@ -37,24 +38,52 @@ declarations:
         }
         listID.clear();
     }
-    | //empty
+    | /* empty */
     ;
 
 type:
     standerd_type
+    ;
 
 standerd_type:
     INT
     | REAL
     ;
 
+subprogram_declarations:
+    subprogram_declarations subprogram_declaration ';'
+    | /* empty */
+    ;
+
+subprogram_declaration:
+    subprogram_head declarations compound_statement
+    ;
+
+subprogram_head:
+    FUNCTION ID arguments ':' standerd_type ';'
+    | PROCEDURE ID arguments ';'
+    ;
+
+arguments:
+    '(' parametr_list ')'
+    | /* empty */
+    ;
+
+parametr_list:
+    identifier_list ':' type
+    | parametr_list ';' identifier_list ':' type
+    ;
+
 compound_statement:
-    BEG optional_statments END
+    BEG 
+    optional_statments 
+    END
     ;
 
 optional_statments:
     statement_list
-    | //empty
+    | /* empty */
+    ;
 
 statement_list:
     statement
@@ -90,13 +119,13 @@ statement:
     } statement {
        gencode_end_while($1 ,$3);
     }
-    | READ '(' identifier_list ')' { 
+    | READ '(' expression_list ')' { 
         for (auto id : listID) {
             gencode_read(id);
         }
         listID.clear();
     }
-    | WRITE '(' identifier_list ')' { 
+    | WRITE '(' expression_list ')' { 
         for (auto id : listID) {
             gencode_write(id);
         }
@@ -110,6 +139,12 @@ variable:
 
 procedure_statement:
     ID
+    | ID '(' expression_list ')'
+    ;
+
+expression_list:
+    expression
+    | expression_list ',' expression
     ;
 
 expression:
@@ -154,6 +189,7 @@ term:
 
 factor:
     variable { $$ = $1; }
+    | ID '(' expression_list ')'
     | NUM { $$ = $1; }
     | '(' expression ')'  { $$ = $2; }
     | NOT factor {

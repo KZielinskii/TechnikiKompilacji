@@ -22,6 +22,8 @@ relop       "<"|"<="|">"|">="|"="|"<>"
 [ \t]        {}
 
 program     {return PROGRAM;}
+function    {return FUNCTION;}
+procedure   {return PROCEDURE;}
 begin       {return BEG;}
 end         {return END;}
 

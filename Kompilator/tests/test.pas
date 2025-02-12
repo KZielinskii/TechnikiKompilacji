@@ -1,10 +1,20 @@
 program example(input, output);
+
 var x, y: integer;
-var g,h:real;
+
+function funname(a, b: integer): integer;
 
 begin
-read(x,y);
-h:=1.5;
-g:=x+y*h;
-write(g)
+
+funname := a
+
+ end;
+
+begin
+
+read(x, y);
+
+write(funname(x, y)) 
+
 end.
+
