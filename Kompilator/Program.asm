@@ -1,6 +1,9 @@
 	jump.i #lab0	 ;jump.i  lab0
+funname:
+	mov.i	16,#funname	 ; mov.i a,funname
+
+
+	enter.i	#0	 ; enter.i 0
 lab0:
-	mov.i	#a,#funname	 ; mov.i a,funname
-	read.i	#a	 ; read.i a
-	read.i	#b	 ; read.i b
+	call.i	#funname	 ; call.i funname
 	exit	;exit

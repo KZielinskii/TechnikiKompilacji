@@ -4,8 +4,10 @@
 int errorno = 0;
 int tempCountAddress = 0;
 std::vector<int> listID;
+std::vector<int> listArgs;
+int offset = 8;
+bool contextGlobal = true;
 
-bool isType(int);
 int yylex();
 void yyerror(const char* s);
 %}
@@ -18,6 +20,11 @@ program:
     PROGRAM ID '(' identifier_list ')' ';'
     declarations 
     subprogram_declarations
+    {
+        //main label program
+        int index = newLabel();
+        gencode_label(index);
+    }
     compound_statement 
     '.'
     ;
@@ -38,7 +45,7 @@ declarations:
         }
         listID.clear();
     }
-    | /* empty */
+    | // E
     ;
 
 type:
@@ -52,26 +59,82 @@ standerd_type:
 
 subprogram_declarations:
     subprogram_declarations subprogram_declaration ';'
-    | /* empty */
+    | // E
     ;
 
 subprogram_declaration:
-    subprogram_head declarations compound_statement
+    subprogram_head {
+        contextGlobal = false;
+    } declarations compound_statement {
+        int stackSize = newNumber(0);
+        gencode_endFunc(stackSize);
+        contextGlobal = true;
+    }
     ;
 
 subprogram_head:
-    FUNCTION ID arguments ':' standerd_type ';'
-    | PROCEDURE ID arguments ';'
+    FUNCTION ID {
+        gencode_label($2);
+    } arguments ':' standerd_type ';' {
+
+        symtable[$2].token = FUNCTION;
+        symtable[$2].type = $6;
+
+        std::vector<symbol_t>args;
+        for(auto arg: listArgs) {
+            symbol_t id = symtable[arg];
+            args.push_back(newArgument(id.type));
+        }
+
+        symtable[$2].arguments = args;
+        listArgs.clear();
+
+        fun_insert(symtable[$2].name, VAR, $6, 4, false, true);
+    }
+    | PROCEDURE ID {
+
+    } arguments ';' {
+
+        symtable[$2].token = PROCEDURE;
+
+        std::vector<symbol_t>args;
+        for(auto arg: listArgs) {
+            symbol_t id = symtable[arg];
+            args.push_back(newArgument(id.type));
+        }
+
+        symtable[$2].arguments = args;
+        listArgs.clear();
+
+    }
     ;
 
 arguments:
-    '(' parametr_list ')'
-    | /* empty */
+    '(' parametr_list ')' {
+        for (auto arg = listArgs.rbegin(); arg != listArgs.rend(); ++arg) {
+            offset += 4; // Size of reference
+            symtable[*arg].address = offset;
+        }
+    }
+    | // E
     ;
 
 parametr_list:
-    identifier_list ':' type
-    | parametr_list ';' identifier_list ':' type
+    parametr
+    | parametr_list ';' parametr
+    ;
+
+parametr:
+    identifier_list ':' type {
+        for (auto symbolIndex : listID) {
+            symtable[symbolIndex].type = $3;
+            symtable[symbolIndex].token = VAR;
+            symtable[symbolIndex].isGlobal = false;
+            symtable[symbolIndex].isPassedArgument = true;
+        }
+        listArgs.insert(listArgs.end(), listID.begin(), listID.end());
+        listID.clear();
+    }
     ;
 
 compound_statement:
@@ -82,7 +145,7 @@ compound_statement:
 
 optional_statments:
     statement_list
-    | /* empty */
+    | // E
     ;
 
 statement_list:
@@ -94,7 +157,7 @@ statement:
     variable ASSIGN expression { 
         gencode_mov($3, $1);
     }
-    | procedure_statement
+    | procedure_statement 
     | compound_statement
     | IF expression {
        $$ = gencode_if($2);
@@ -139,7 +202,13 @@ variable:
 
 procedure_statement:
     ID
-    | ID '(' expression_list ')'
+    | ID '(' expression_list ')' {
+        for (int id : listID) {
+            gencode_push(id);
+        }
+        gencode_call($1);
+        listID.clear();
+    }
     ;
 
 expression_list:
@@ -189,7 +258,15 @@ term:
 
 factor:
     variable { $$ = $1; }
-    | ID '(' expression_list ')'
+    | ID '(' expression_list ')' {
+        for (int id : listID) {
+            gencode_push(id);
+        }
+        gencode_call($1);
+        $$ = gencode_return($1);
+
+        listID.clear();
+    }
     | NUM { $$ = $1; }
     | '(' expression ')'  { $$ = $2; }
     | NOT factor {

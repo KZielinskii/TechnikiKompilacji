@@ -34,13 +34,14 @@ std::string symbolicOperand(int op) {
 
 void gencode(std::string m, int index1, int index2, int index3) { // index = -1 jeżeli nie ma być wypisany
     std::ostringstream oss;
+    if(index1!=-1)
     oss << "\t" << m << "\t" << machineOperand(index1); 
     if(index2!=-1)
     oss << "," << machineOperand(index2); 
     if(index3!=-1)
     oss << "," << machineOperand(index3);
 
-
+    if(index1!=-1)
     oss << "\t ; " << m << " " << symbolicOperand(index1);
     if(index2!=-1)
     oss << "," << symbolicOperand(index2);
@@ -216,12 +217,32 @@ int gencode_sign(int index) {
     return newIndexTemp;
 }
 
+void gencode_call(int index) {
+    gencode("call.i", index, -1, -1);
+}
+int gencode_return(int index) {
+    int temp = getTempAddress(4);
+    
+
+    return temp;
+}
+void gencode_push(int index) {
+    //printf("\tpush [%d]\n", symtable[index].address);
+    gencode("push.i", index, -1, -1);
+}
+
+//index offset
+void gencode_endFunc(int index)
+{
+    gencode("leave", -1, -1, -1);
+    gencode("return", -1, -1, -1);
+    gencode("enter.i", index, -1, -1);
+}
 
 void saveAsmCode(std::string filename) {
     std::ofstream outFile(filename);
     
     outFile << "\tjump.i #lab0\t ;jump.i  lab0\n";
-    outFile << "lab0:\n";
 
     for (const auto& line : asmCode) {
         outFile << line << "\n";
