@@ -565,11 +565,11 @@ static const yytype_int8 yytranslate[] =
 static const yytype_int16 yyrline[] =
 {
        0,    23,    23,    20,    33,    34,    38,    49,    53,    57,
-      58,    62,    63,    67,    67,    78,    78,    96,    96,   115,
-     122,   126,   127,   131,   145,   151,   152,   156,   157,   161,
-     164,   165,   166,   168,   171,   166,   177,   179,   182,   177,
-     189,   195,   204,   208,   211,   217,   220,   226,   227,   233,
-     234,   241,   252,   253,   266,   267,   293,   294,   295
+      58,    62,    63,    67,    67,    78,    78,   100,   100,   119,
+     126,   130,   131,   135,   149,   155,   156,   160,   161,   165,
+     168,   169,   170,   172,   175,   170,   181,   183,   186,   181,
+     193,   199,   208,   212,   215,   221,   224,   230,   231,   237,
+     238,   245,   256,   257,   270,   271,   297,   298,   299
 };
 #endif
 
@@ -1208,7 +1208,7 @@ yyreduce:
   case 2: /* $@1: %empty  */
 #line 23 "parser.y"
     {
-        //main label program
+        //main label
         int index = newLabel();
         gencode_label(index);
     }
@@ -1274,8 +1274,11 @@ yyreduce:
 #line 80 "parser.y"
                                       {
 
+        offset = 8;
         symtable[yyvsp[-5]].token = FUNCTION;
         symtable[yyvsp[-5]].type = yyvsp[-1];
+        symtable[yyvsp[-5]].address = offset;
+        symtable[yyvsp[-5]].isReference = true;
 
         std::vector<symbol_t>args;
         for(auto arg: listArgs) {
@@ -1286,21 +1289,22 @@ yyreduce:
         symtable[yyvsp[-5]].arguments = args;
         listArgs.clear();
 
-        fun_insert(symtable[yyvsp[-5]].name, VAR, yyvsp[-1], 4, false, true);
+       // fun_insert(symtable[$2].name, VAR, $6, offset, false, true);
+
     }
-#line 1292 "parser.cpp"
+#line 1296 "parser.cpp"
     break;
 
   case 17: /* $@4: %empty  */
-#line 96 "parser.y"
+#line 100 "parser.y"
                    {
 
     }
-#line 1300 "parser.cpp"
+#line 1304 "parser.cpp"
     break;
 
   case 18: /* subprogram_head: PROCEDURE ID $@4 arguments ';'  */
-#line 98 "parser.y"
+#line 102 "parser.y"
                     {
 
         symtable[yyvsp[-3]].token = PROCEDURE;
@@ -1315,11 +1319,11 @@ yyreduce:
         listArgs.clear();
 
     }
-#line 1319 "parser.cpp"
+#line 1323 "parser.cpp"
     break;
 
   case 19: /* arguments: '(' parametr_list ')'  */
-#line 115 "parser.y"
+#line 119 "parser.y"
                           {
         std::vector<int>::iterator arg;
         for (arg = listArgs.end() - 1; arg >= listArgs.begin(); arg--) {
@@ -1327,11 +1331,11 @@ yyreduce:
             symtable[*arg].address = offset;
         }
     }
-#line 1331 "parser.cpp"
+#line 1335 "parser.cpp"
     break;
 
   case 23: /* parametr: identifier_list ':' type  */
-#line 131 "parser.y"
+#line 135 "parser.y"
                              {
         for (auto symbolIndex : listID) {
             symbol_t* symbol = &symtable[symbolIndex];
@@ -1343,153 +1347,153 @@ yyreduce:
         listArgs.insert(listArgs.end(), listID.begin(), listID.end());
         listID.clear();
     }
-#line 1347 "parser.cpp"
+#line 1351 "parser.cpp"
     break;
 
   case 29: /* statement: variable ASSIGN expression  */
-#line 161 "parser.y"
+#line 165 "parser.y"
                                { 
         gencode_mov(yyvsp[0], yyvsp[-2]);
     }
-#line 1355 "parser.cpp"
+#line 1359 "parser.cpp"
     break;
 
   case 32: /* @5: %empty  */
-#line 166 "parser.y"
+#line 170 "parser.y"
                     {
        yyval = gencode_if(yyvsp[0]);
     }
-#line 1363 "parser.cpp"
+#line 1367 "parser.cpp"
     break;
 
   case 33: /* @6: %empty  */
-#line 168 "parser.y"
+#line 172 "parser.y"
            {
        yyval = gencode_then(yyvsp[-1]);
     }
-#line 1371 "parser.cpp"
+#line 1375 "parser.cpp"
     break;
 
   case 34: /* @7: %empty  */
-#line 171 "parser.y"
+#line 175 "parser.y"
                    {
        yyval = gencode_else(yyvsp[-2]);
     }
-#line 1379 "parser.cpp"
+#line 1383 "parser.cpp"
     break;
 
   case 35: /* statement: IF expression @5 THEN @6 statement ELSE @7 statement  */
-#line 174 "parser.y"
+#line 178 "parser.y"
               {
         gencode_label(yyvsp[-1]);
     }
-#line 1387 "parser.cpp"
+#line 1391 "parser.cpp"
     break;
 
   case 36: /* @8: %empty  */
-#line 177 "parser.y"
+#line 181 "parser.y"
       {
         yyval = newLabel();
     }
-#line 1395 "parser.cpp"
+#line 1399 "parser.cpp"
     break;
 
   case 37: /* @9: %empty  */
-#line 179 "parser.y"
+#line 183 "parser.y"
            {
         yyval = gencode_while();
     }
-#line 1403 "parser.cpp"
+#line 1407 "parser.cpp"
     break;
 
   case 38: /* @10: %empty  */
-#line 182 "parser.y"
+#line 186 "parser.y"
                   {
         int temp = gencode_if(yyvsp[-1]);
         yyval = gencode_while_then(temp,yyvsp[-4]);
         
     }
-#line 1413 "parser.cpp"
+#line 1417 "parser.cpp"
     break;
 
   case 39: /* statement: @8 WHILE @9 expression DO @10 statement  */
-#line 186 "parser.y"
+#line 190 "parser.y"
                 {
        gencode_end_while(yyvsp[-6] ,yyvsp[-4]);
     }
-#line 1421 "parser.cpp"
+#line 1425 "parser.cpp"
     break;
 
   case 40: /* statement: READ '(' expression_list ')'  */
-#line 189 "parser.y"
+#line 193 "parser.y"
                                    { 
         for (auto id : listID) {
             gencode_read(id);
         }
         listID.clear();
     }
-#line 1432 "parser.cpp"
+#line 1436 "parser.cpp"
     break;
 
   case 41: /* statement: WRITE '(' expression_list ')'  */
-#line 195 "parser.y"
+#line 199 "parser.y"
                                     { 
         for (auto id : listID) {
             gencode_write(id);
         }
         listID.clear();
     }
-#line 1443 "parser.cpp"
+#line 1447 "parser.cpp"
     break;
 
   case 43: /* procedure_statement: ID  */
-#line 208 "parser.y"
+#line 212 "parser.y"
        {
         
     }
-#line 1451 "parser.cpp"
+#line 1455 "parser.cpp"
     break;
 
   case 44: /* procedure_statement: ID '(' expression_list ')'  */
-#line 211 "parser.y"
+#line 215 "parser.y"
                                  {
 
     }
-#line 1459 "parser.cpp"
+#line 1463 "parser.cpp"
     break;
 
   case 45: /* expression_list: expression  */
-#line 217 "parser.y"
+#line 221 "parser.y"
                {
         listID.push_back(yyvsp[0]);
     }
-#line 1467 "parser.cpp"
+#line 1471 "parser.cpp"
     break;
 
   case 46: /* expression_list: expression_list ',' expression  */
-#line 220 "parser.y"
+#line 224 "parser.y"
                                      {
         listID.push_back(yyvsp[0]);
     }
-#line 1475 "parser.cpp"
+#line 1479 "parser.cpp"
     break;
 
   case 48: /* expression: simple_expression RELOP simple_expression  */
-#line 227 "parser.y"
+#line 231 "parser.y"
                                                 {
        yyval = gencode_relop(yyvsp[-1], yyvsp[-2], yyvsp[0]);
     }
-#line 1483 "parser.cpp"
+#line 1487 "parser.cpp"
     break;
 
   case 49: /* simple_expression: term  */
-#line 233 "parser.y"
+#line 237 "parser.y"
          { yyval = yyvsp[0]; }
-#line 1489 "parser.cpp"
+#line 1493 "parser.cpp"
     break;
 
   case 50: /* simple_expression: ADDOP term  */
-#line 234 "parser.y"
+#line 238 "parser.y"
                  {
         if (yyvsp[-1] == SUB) {
             yyval = gencode_sign(yyvsp[0]);
@@ -1497,11 +1501,11 @@ yyreduce:
             yyval = yyvsp[0];
         }
     }
-#line 1501 "parser.cpp"
+#line 1505 "parser.cpp"
     break;
 
   case 51: /* simple_expression: simple_expression ADDOP term  */
-#line 241 "parser.y"
+#line 245 "parser.y"
                                    { 
         if (yyvsp[-1] == ADD) {
             yyval = gencode_op("add", yyvsp[-2], yyvsp[0]);
@@ -1510,17 +1514,17 @@ yyreduce:
             yyval = gencode_op("sub", yyvsp[-2], yyvsp[0]);
         }
     }
-#line 1514 "parser.cpp"
+#line 1518 "parser.cpp"
     break;
 
   case 52: /* term: factor  */
-#line 252 "parser.y"
+#line 256 "parser.y"
            { yyval = yyvsp[0]; }
-#line 1520 "parser.cpp"
+#line 1524 "parser.cpp"
     break;
 
   case 53: /* term: term MULOP factor  */
-#line 253 "parser.y"
+#line 257 "parser.y"
                         {
         if (yyvsp[-1] == MUL) {
             yyval = gencode_op("mul", yyvsp[-2], yyvsp[0]);
@@ -1532,17 +1536,17 @@ yyreduce:
             yyval = gencode_op("mod", yyvsp[-2], yyvsp[0]);
         }
     }
-#line 1536 "parser.cpp"
+#line 1540 "parser.cpp"
     break;
 
   case 54: /* factor: variable  */
-#line 266 "parser.y"
+#line 270 "parser.y"
              { yyval = yyvsp[0]; }
-#line 1542 "parser.cpp"
+#line 1546 "parser.cpp"
     break;
 
   case 55: /* factor: ID '(' expression_list ')'  */
-#line 267 "parser.y"
+#line 271 "parser.y"
                                  {
        
         symbol_t func = symtable[yyvsp[-3]];
@@ -1569,31 +1573,31 @@ yyreduce:
         int index = newNumber(incsp);
         gencode_incsp(index);
     }
-#line 1573 "parser.cpp"
+#line 1577 "parser.cpp"
     break;
 
   case 56: /* factor: NUM  */
-#line 293 "parser.y"
+#line 297 "parser.y"
           { yyval = yyvsp[0]; }
-#line 1579 "parser.cpp"
+#line 1583 "parser.cpp"
     break;
 
   case 57: /* factor: '(' expression ')'  */
-#line 294 "parser.y"
+#line 298 "parser.y"
                           { yyval = yyvsp[-1]; }
-#line 1585 "parser.cpp"
+#line 1589 "parser.cpp"
     break;
 
   case 58: /* factor: NOT factor  */
-#line 295 "parser.y"
+#line 299 "parser.y"
                  {
        yyval = gencode_not(yyvsp[0]);
     }
-#line 1593 "parser.cpp"
+#line 1597 "parser.cpp"
     break;
 
 
-#line 1597 "parser.cpp"
+#line 1601 "parser.cpp"
 
       default: break;
     }
@@ -1786,7 +1790,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 300 "parser.y"
+#line 304 "parser.y"
 
 
 void yyerror(const char* s) {

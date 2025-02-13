@@ -279,6 +279,7 @@ void gencode_push(int index, symbol_t expected) {
 }
 
 void gencode_call(int index) {
+    symtable[index].isReference=false;
     gencode_ref("call.i", index, -1);
 }
 

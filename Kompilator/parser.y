@@ -79,8 +79,11 @@ subprogram_head:
         gencode_label($2);
     } arguments ':' standerd_type ';' {
 
+        offset = 8;
         symtable[$2].token = FUNCTION;
         symtable[$2].type = $6;
+        symtable[$2].address = offset;
+        symtable[$2].isReference = true;
 
         std::vector<symbol_t>args;
         for(auto arg: listArgs) {
@@ -91,7 +94,8 @@ subprogram_head:
         symtable[$2].arguments = args;
         listArgs.clear();
 
-        fun_insert(symtable[$2].name, VAR, $6, 4, false, true);
+       // fun_insert(symtable[$2].name, VAR, $6, offset, false, true);
+
     }
     | PROCEDURE ID {
 

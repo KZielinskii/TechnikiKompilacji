@@ -38,12 +38,7 @@ int insert(std::string name, int token, int type) {
 }
 
 int fun_insert(std::string name, int token, int type, int address, bool isGlobal, bool isReference) {
-  for (size_t i = 0; i < symtable.size(); i++) {
-      if (symtable[i].name == name) {
-          return i;
-      }
-  }
-
+  
   symbol_t newSymbol;
   newSymbol.name = name;
   newSymbol.token = token;
