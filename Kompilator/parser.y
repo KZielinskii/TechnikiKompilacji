@@ -21,7 +21,7 @@ program:
     declarations 
     subprogram_declarations
     {
-        //main label program
+        //main label
         int index = newLabel();
         gencode_label(index);
     }
@@ -41,6 +41,7 @@ declarations:
             symtable[id].type = $5;
             symtable[id].token = VAR;
             symtable[id].address = tempCountAddress;
+            symtable[id].isGlobal = contextGlobal;
             tempCountAddress += size;
         }
         listID.clear();
@@ -133,7 +134,7 @@ parametr:
             symbol->type = $3;
             symbol->token = VAR;
             symbol->isGlobal = false;
-            symbol->isPassedArgument = true;
+            symbol->isReference = true;
         }
         listArgs.insert(listArgs.end(), listID.begin(), listID.end());
         listID.clear();
@@ -286,7 +287,8 @@ factor:
 
         $$ = result;
         gencode_call($1);
-        gencode_incsp(incsp);
+        int index = newNumber(incsp);
+        gencode_incsp(index);
     }
     | NUM { $$ = $1; }
     | '(' expression ')'  { $$ = $2; }
