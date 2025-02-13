@@ -5,25 +5,34 @@
 
 std::vector<std::string> asmCode;
 
-std::string machineOperand(int op) {   
-    if (op >= (int)symtable.size()) {
-        std::cout << "Błąd index" << std::to_string(op) << "!\n"; 
+std::string machineOperand(int index) {   
+    if (index >= (int)symtable.size()) {
+        std::cout << "Błąd index" << std::to_string(index) << "!\n"; 
         return std::to_string(-1);
     }
-    symbol_t sym = symtable.at(op);
+    symbol_t sym = symtable.at(index);
+    std::string ret = "";
     
-    if(sym.token==VAR) {
-        return std::to_string(sym.address);
+    if(sym.isReference) {
+        ret += "*";
+    }
+    if(!sym.isGlobal) {
+        ret += "BP";
+        ret += (sym.address>=0 ? "+": "");
+    }
+    if(sym.token==VAR || sym.isReference) {
+        ret += std::to_string(sym.address);
+        return ret;
     }
     return ("#" + sym.name);
 }
 
 
-std::string symbolicOperand(int op) {
-    if (op >= (int)symtable.size()) {
+std::string symbolicOperand(int index) {
+    if (index >= (int)symtable.size()) {
         return std::to_string(-1);
     }
-    symbol_t sym = symtable.at(op);
+    symbol_t sym = symtable.at(index);
 
     if(sym.token==VAR) {
         return sym.name;
@@ -34,19 +43,39 @@ std::string symbolicOperand(int op) {
 
 void gencode(std::string m, int index1, int index2, int index3) { // index = -1 jeżeli nie ma być wypisany
     std::ostringstream oss;
+
+    oss << "\t" << m << "\t";
     if(index1!=-1)
-    oss << "\t" << m << "\t" << machineOperand(index1); 
+    oss << machineOperand(index1); 
     if(index2!=-1)
     oss << "," << machineOperand(index2); 
     if(index3!=-1)
     oss << "," << machineOperand(index3);
 
+    oss << "\t ; " << m << " ";
     if(index1!=-1)
-    oss << "\t ; " << m << " " << symbolicOperand(index1);
+    oss << symbolicOperand(index1);
     if(index2!=-1)
     oss << "," << symbolicOperand(index2);
     if(index3!=-1)
     oss << "," << symbolicOperand(index3);
+    asmCode.push_back(oss.str());
+}
+
+void gencode_ref(std::string m, int index1, int index2) { // index = -1 jeżeli nie ma być wypisany
+    std::ostringstream oss;
+    oss << "\t" << m << "\t";
+    if(index1!=-1)
+    oss << ((symtable[index1].token == VAR)? "#" : "") << machineOperand(index1); 
+    if(index2!=-1)
+    oss << "," << machineOperand(index2); 
+
+    oss << "\t ; " << m << " ";
+    if(index1!=-1)
+    oss << "&" << symbolicOperand(index1);
+    if(index2!=-1)
+    oss << "," << symbolicOperand(index2);
+
     asmCode.push_back(oss.str());
 }
 
@@ -217,26 +246,53 @@ int gencode_sign(int index) {
     return newIndexTemp;
 }
 
-void gencode_call(int index) {
-    gencode("call.i", index, -1, -1);
-}
-int gencode_return(int index) {
-    int temp = getTempAddress(4);
-    
+void gencode_startFunc() {
 
-    return temp;
 }
-void gencode_push(int index) {
-    //printf("\tpush [%d]\n", symtable[index].address);
-    gencode("push.i", index, -1, -1);
+
+void gencode_push(int index, symbol_t expected) {
+    symbol_t arg = symtable[index];
+    int pushIndex = index;
+    //tworzymy nową zmienną dla liczby
+    if(arg.token == NUM) {
+        int newIndexTemp = newTemp(expected.type);
+        gencode_mov(index, newIndexTemp);
+        pushIndex = newIndexTemp;
+    } else {
+        if (symtable[index].type != expected.type) {
+            if (symtable[index].type == INT && expected.type == REAL) {
+                int tempIndex = newTemp(REAL);
+                gencode_intToReal(index, tempIndex);
+                pushIndex = tempIndex;
+            } 
+            else if(symtable[index].type == REAL && expected.type == INT) {
+                int tempIndex = newTemp(INT);
+                gencode_realToInt(index, tempIndex);
+                pushIndex = tempIndex;
+            } else {
+                yyerror("Typy argumentów funkcji się nie zgadzają!");
+            }
+        }
+    }
+
+    gencode_ref("push.i", pushIndex, -1);
+}
+
+void gencode_call(int index) {
+    gencode_ref("call.i", index, -1);
+}
+
+void gencode_incsp(int incsp) {
+    gencode("incsp.i", incsp, -1, -1);
 }
 
 //index offset
 void gencode_endFunc(int index)
 {
+    gencode("enter.i", index, -1, -1);
+
     gencode("leave", -1, -1, -1);
     gencode("return", -1, -1, -1);
-    gencode("enter.i", index, -1, -1);
 }
 
 void saveAsmCode(std::string filename) {

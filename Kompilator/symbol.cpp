@@ -37,7 +37,7 @@ int insert(std::string name, int token, int type) {
     return symtable.size() - 1;  // Zwracamy indeks nowego symbolu
 }
 
-int fun_insert(std::string name, int token, int type, int address, bool isGlobal, bool isPassedArgument) {
+int fun_insert(std::string name, int token, int type, int address, bool isGlobal, bool isReference) {
   for (size_t i = 0; i < symtable.size(); i++) {
       if (symtable[i].name == name) {
           return i;
@@ -50,7 +50,7 @@ int fun_insert(std::string name, int token, int type, int address, bool isGlobal
   newSymbol.type = type;
   newSymbol.address = address;
   newSymbol.isGlobal = isGlobal;
-  newSymbol.isPassedArgument = isPassedArgument;
+  newSymbol.isReference = isReference;
 
   symtable.push_back(newSymbol);
   return symtable.size() - 1;
@@ -62,6 +62,7 @@ int newTemp(int type) {
     newSymbol.token = VAR;
     newSymbol.type = type;
     newSymbol.address = getTempAddress((type == INT) ? 4 : 8);
+    newSymbol.isGlobal = contextGlobal;
     tempCounter++;
 
     symtable.push_back(newSymbol);
@@ -82,6 +83,7 @@ int newNumber(int number) {
     symbol_t newSymbol;
     newSymbol.name = std::to_string(number);
     newSymbol.token = NUM;
+    newSymbol.isGlobal = contextGlobal;
 
     symtable.push_back(newSymbol);
     return symtable.size() - 1;
@@ -94,7 +96,6 @@ symbol_t newArgument(int type)
   newSymbol.type = type;
   newSymbol.token = NONE;
   newSymbol.isGlobal = contextGlobal;
-  newSymbol.isPassedArgument = false;
 
   newSymbol.address = 0xFFFF;
   return newSymbol;
@@ -112,6 +113,6 @@ void printSymtable()
   {
     std::cout
         << i++ << " " << token_name(symbol.token) << "\t" << symbol.name << "\t" << ((symbol.token == VAR || symbol.token == FUNCTION) ? ((symbol.type == INT) ? "INT" : "REAL") : "") << "\t"
-        << ((symbol.token == VAR) ? "\t" + std::to_string(symbol.address) : "")<< std::endl;
+        << ((symbol.token == VAR) ? "\t" + std::to_string(symbol.address) : "")<< " " <<(symbol.isGlobal ? "GLOBAL" : "LOCAL") << " " << (symbol.isReference ? "P" : "N") <<std::endl;
   }
 }

@@ -65,6 +65,7 @@ subprogram_declarations:
 subprogram_declaration:
     subprogram_head {
         contextGlobal = false;
+        gencode_startFunc();
     } declarations compound_statement {
         int stackSize = newNumber(0);
         gencode_endFunc(stackSize);
@@ -111,7 +112,8 @@ subprogram_head:
 
 arguments:
     '(' parametr_list ')' {
-        for (auto arg = listArgs.rbegin(); arg != listArgs.rend(); ++arg) {
+        std::vector<int>::iterator arg;
+        for (arg = listArgs.end() - 1; arg >= listArgs.begin(); arg--) {
             offset += 4; // Size of reference
             symtable[*arg].address = offset;
         }
@@ -127,10 +129,11 @@ parametr_list:
 parametr:
     identifier_list ':' type {
         for (auto symbolIndex : listID) {
-            symtable[symbolIndex].type = $3;
-            symtable[symbolIndex].token = VAR;
-            symtable[symbolIndex].isGlobal = false;
-            symtable[symbolIndex].isPassedArgument = true;
+            symbol_t* symbol = &symtable[symbolIndex];
+            symbol->type = $3;
+            symbol->token = VAR;
+            symbol->isGlobal = false;
+            symbol->isPassedArgument = true;
         }
         listArgs.insert(listArgs.end(), listID.begin(), listID.end());
         listID.clear();
@@ -201,19 +204,21 @@ variable:
     ;
 
 procedure_statement:
-    ID
+    ID {
+        
+    }
     | ID '(' expression_list ')' {
-        for (int id : listID) {
-            gencode_push(id);
-        }
-        gencode_call($1);
-        listID.clear();
+
     }
     ;
 
 expression_list:
-    expression
-    | expression_list ',' expression
+    expression {
+        listID.push_back($1);
+    }
+    | expression_list ',' expression {
+        listID.push_back($3);
+    }
     ;
 
 expression:
@@ -259,13 +264,29 @@ term:
 factor:
     variable { $$ = $1; }
     | ID '(' expression_list ')' {
-        for (int id : listID) {
-            gencode_push(id);
+       
+        symbol_t func = symtable[$1];
+        if(func.arguments.size() != listID.size()) {
+            yyerror("Zła ilość argumentów funkcji!");
         }
-        gencode_call($1);
-        $$ = gencode_return($1);
 
+        int incsp = 0;
+
+        for(int id = 0; id < int(listID.size()); ++id) { 
+            symbol_t expected = func.arguments[id];
+            gencode_push(listID[id], expected);
+            incsp += 4;
+        }
         listID.clear();
+        
+        //push result
+        int result = newTemp(func.type);
+        gencode_push(result, newArgument(func.type));
+        incsp += 4;
+
+        $$ = result;
+        gencode_call($1);
+        gencode_incsp(incsp);
     }
     | NUM { $$ = $1; }
     | '(' expression ')'  { $$ = $2; }

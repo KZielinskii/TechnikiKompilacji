@@ -16,7 +16,7 @@ extern bool contextGlobal;
 
 int yylex_destroy();
 int getTempAddress(int size);
-int newLabel();
+void yyerror(const char* s);
 
 int insert(std::string name, int token, int type);
 int fun_insert(std::string name, int token, int type, int address, bool isGlobal, bool isPassedArgument);
@@ -31,6 +31,8 @@ void printSymtable();
 void saveAsmCode(std::string);
 int getOperationToken(std::string);
 const char *token_name(int);
+
+void gencode(std::string m, int index1, int index2, int index3);
 
 void gencode_label(int index);
 void gencode_mov(int index1, int index2);
@@ -51,7 +53,9 @@ int gencode_sign(int index);
 
 void gencode_call(int index);
 int gencode_return(int index);
-void gencode_push(int index);
+void gencode_push(int index, symbol_t expected);
+void gencode_startFunc();
 void gencode_endFunc(int index);
+void gencode_incsp(int incsp);
 
 
