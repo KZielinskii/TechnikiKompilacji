@@ -37,26 +37,17 @@ int insert(std::string name, int token, int type) {
     return symtable.size() - 1;  // Zwracamy indeks nowego symbolu
 }
 
-int fun_insert(std::string name, int token, int type, int address, bool isGlobal, bool isReference) {
-  
-  symbol_t newSymbol;
-  newSymbol.name = name;
-  newSymbol.token = token;
-  newSymbol.type = type;
-  newSymbol.address = address;
-  newSymbol.isGlobal = isGlobal;
-  newSymbol.isReference = isReference;
-
-  symtable.push_back(newSymbol);
-  return symtable.size() - 1;
-}
-
 int newTemp(int type) {
     symbol_t newSymbol;
     newSymbol.name = "t"+ std::to_string(tempCounter);
     newSymbol.token = VAR;
     newSymbol.type = type;
-    newSymbol.address = getTempAddress((type == INT) ? 4 : 8);
+    int size = (type == INT) ? 4 : 8;
+    if (contextGlobal) {
+        newSymbol.address = getTempAddress(size);
+    } else {
+        newSymbol.address = getLocalAddress(size);
+    }
     newSymbol.isGlobal = contextGlobal;
     tempCounter++;
 

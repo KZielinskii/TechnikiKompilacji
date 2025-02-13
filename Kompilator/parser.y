@@ -6,7 +6,9 @@ int tempCountAddress = 0;
 std::vector<int> listID;
 std::vector<int> listArgs;
 int offset = 8;
+int localOffset = 0;
 bool contextGlobal = true;
+int startLabel;
 
 int yylex();
 void yyerror(const char* s);
@@ -17,13 +19,14 @@ void yyerror(const char* s);
 %%
 
 program:
-    PROGRAM ID '(' identifier_list ')' ';'
+    PROGRAM ID {
+        startLabel = newLabel();
+    }'(' identifier_list ')' ';'
     declarations 
     subprogram_declarations
     {
         //main label
-        int index = newLabel();
-        gencode_label(index);
+        gencode_label(startLabel);
     }
     compound_statement 
     '.'
@@ -40,9 +43,13 @@ declarations:
         for (int id : listID) {
             symtable[id].type = $5;
             symtable[id].token = VAR;
-            symtable[id].address = tempCountAddress;
             symtable[id].isGlobal = contextGlobal;
-            tempCountAddress += size;
+            if (contextGlobal) {
+                symtable[id].address = tempCountAddress;
+                tempCountAddress += size;
+            } else {
+                symtable[id].address = getLocalAddress(size);
+            }
         }
         listID.clear();
     }
@@ -66,9 +73,10 @@ subprogram_declarations:
 subprogram_declaration:
     subprogram_head {
         contextGlobal = false;
+        localOffset = 0;
         gencode_startFunc();
     } declarations compound_statement {
-        int stackSize = newNumber(0);
+        int stackSize = newNumber(-localOffset);
         gencode_endFunc(stackSize);
         contextGlobal = true;
     }
@@ -93,8 +101,6 @@ subprogram_head:
 
         symtable[$2].arguments = args;
         listArgs.clear();
-
-       // fun_insert(symtable[$2].name, VAR, $6, offset, false, true);
 
     }
     | PROCEDURE ID {
@@ -313,7 +319,15 @@ const char *token_name(int token) {
 }
 
 int getTempAddress(int size) {
-    int temp = tempCountAddress;
-    tempCountAddress+=size;
-    return temp;
+    if(contextGlobal) {
+        int temp = tempCountAddress;
+        tempCountAddress+=size;
+        return temp;
+    }
+    return 0;
+}
+
+int getLocalAddress(int size) {
+    localOffset -= size;
+    return localOffset;
 }

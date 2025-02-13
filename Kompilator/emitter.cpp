@@ -5,6 +5,9 @@
 
 std::vector<std::string> asmCode;
 
+bool inFunctionMode = false;
+std::vector<std::string> functionBuffer;
+
 std::string machineOperand(int index) {   
     if (index >= (int)symtable.size()) {
         std::cout << "Błąd index" << std::to_string(index) << "!\n"; 
@@ -41,6 +44,13 @@ std::string symbolicOperand(int index) {
     return sym.name;
 }
 
+void addCodeLine(const std::string &line) {
+    if (inFunctionMode)
+        functionBuffer.push_back(line);
+    else
+        asmCode.push_back(line);
+}
+
 void gencode(std::string m, int index1, int index2, int index3) { // index = -1 jeżeli nie ma być wypisany
     std::ostringstream oss;
 
@@ -59,7 +69,7 @@ void gencode(std::string m, int index1, int index2, int index3) { // index = -1 
     oss << "," << symbolicOperand(index2);
     if(index3!=-1)
     oss << "," << symbolicOperand(index3);
-    asmCode.push_back(oss.str());
+    addCodeLine(oss.str());
 }
 
 void gencode_ref(std::string m, int index1, int index2) { // index = -1 jeżeli nie ma być wypisany
@@ -76,13 +86,13 @@ void gencode_ref(std::string m, int index1, int index2) { // index = -1 jeżeli 
     if(index2!=-1)
     oss << "," << symbolicOperand(index2);
 
-    asmCode.push_back(oss.str());
+    addCodeLine(oss.str());
 }
 
 void gencode_label(int index) {
     std::ostringstream oss;
     oss << symtable[index].name << ":";
-    asmCode.push_back(oss.str());
+    addCodeLine(oss.str());
 }
 
 void gencode_mov(int index1, int index2) {
@@ -247,7 +257,8 @@ int gencode_sign(int index) {
 }
 
 void gencode_startFunc() {
-
+    inFunctionMode = true;
+    functionBuffer.clear();
 }
 
 void gencode_push(int index, symbol_t expected) {
@@ -290,8 +301,12 @@ void gencode_incsp(int incsp) {
 //index offset
 void gencode_endFunc(int index)
 {
+    inFunctionMode = false;
     gencode("enter.i", index, -1, -1);
-
+    for (auto &line : functionBuffer) {
+        asmCode.push_back(line);
+    }
+    functionBuffer.clear();
     gencode("leave", -1, -1, -1);
     gencode("return", -1, -1, -1);
 }

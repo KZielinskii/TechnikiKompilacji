@@ -16,10 +16,10 @@ extern bool contextGlobal;
 
 int yylex_destroy();
 int getTempAddress(int size);
+int getLocalAddress(int size);
 void yyerror(const char* s);
 
 int insert(std::string name, int token, int type);
-int fun_insert(std::string name, int token, int type, int address, bool isGlobal, bool isPassedArgument);
 int newTemp(int type);
 int newLabel();
 int newNumber(int number);
