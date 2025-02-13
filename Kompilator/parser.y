@@ -219,12 +219,8 @@ variable:
     ;
 
 procedure_statement:
-    ID {
-        
-    }
-    | ID '(' expression_list ')' {
-
-    }
+    ID 
+    | ID '(' expression_list ')'
     ;
 
 expression_list:

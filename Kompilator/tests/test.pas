@@ -72,13 +72,13 @@ end.
 
 program example(input, output);
 
-var a: integer;
+var a: real;
 
 begin
 
-while a < 5 do
+while a < 10 do
 begin
-a := a+1
+a := a + 1.1
 end;
 
 write(a)
@@ -87,5 +87,5 @@ end.
 
 
 
-
+===================================================
 
