@@ -321,6 +321,15 @@ void gencode_endFunc(int index)
     gencode("return", -1, -1, -1);
 }
 
+void gencode_arrayAccess(int arrayIndex, int elementOffset, int resultIndex) {
+    gencode("load.i", resultIndex, arrayIndex, elementOffset);
+}
+
+void gencode_arrayStore(int arrayIndex, int elementOffset, int valueIndex) {
+    gencode("store.i", arrayIndex, elementOffset, valueIndex);
+}
+
+
 void saveAsmCode(std::string filename) {
     std::ofstream outFile(filename);
     

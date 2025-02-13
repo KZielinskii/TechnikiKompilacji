@@ -58,7 +58,26 @@ declarations:
 
 type:
     standerd_type
-    ;
+    | ARRAY '[' NUM '..' NUM ']' OF standerd_type {
+        $$ = ARRAY;
+        for (int id : listID) {
+            symtable[id].token = ARRAY;
+            symtable[id].type = $7;
+            symtable[id].isGlobal = contextGlobal;
+            symtable[id].arrayLowerBound = $3;
+            symtable[id].arrayUpperBound = $5;
+            int size = ($7 == INT) ? 4 : 8;
+            int arraySize = ($5 - $3 + 1) * size;
+            if (contextGlobal) {
+                symtable[id].address = tempCountAddress;
+                tempCountAddress += arraySize;
+            } else {
+                symtable[id].address = getLocalAddress(arraySize);
+            }
+        }
+        listID.clear();
+    };
+
 
 standerd_type:
     INT
@@ -215,8 +234,19 @@ statement:
     ;
 
 variable:
-    ID
-    ;
+    ID {
+        $$ = $1;
+    }
+    | ID '[' expression ']' {
+        if (symtable[$1].token != ARRAY) {
+            yyerror("Próba indeksowania zmiennej, która nie jest tablicą!");
+        }
+        int indexOffset = gencode_op("sub.i", $3, newNumber(symtable[$1].arrayLowerBound));
+        int elementOffset = gencode_op("mul.i", indexOffset, newNumber(4)); // Jeśli INT, to 4 bajty
+        int finalAddress = gencode_op("add.i", newNumber(symtable[$1].address), elementOffset);
+        $$ = finalAddress;
+    };
+
 
 procedure_statement:
     ID {

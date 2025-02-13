@@ -58,4 +58,5 @@ void gencode_startFunc();
 void gencode_endFunc(int index);
 void gencode_incsp(int incsp);
 
-
+void gencode_arrayAccess(int arrayIndex, int elementOffset, int resultIndex);
+void gencode_arrayStore(int arrayIndex, int elementOffset, int valueIndex);
