@@ -18,11 +18,11 @@ lab3:
 	push.i	#BP-20	 ; push.i &t2
 	push.i	#BP-24	 ; push.i &t3
 	push.i	#BP-28	 ; push.i &t4
-	call.i	#funname	 ; call.i &funname
+	call.i	#funname	; call.i &funname
 	incsp.i	#12	 ; incsp.i 12
 	mov.i	BP-28,BP-8	 ; mov.i t4,la
 lab4:
-	mov.i	BP-8,#funname	 ; mov.i la,funname
+	mov.i	BP-8,*BP+8	 ; mov.i la,funname
 	leave		 ; leave 
 	return		 ; return 
 lab0:
@@ -33,7 +33,7 @@ lab0:
 	mov.i	20,16	 ; mov.i t6,t5
 	push.i	#16	 ; push.i &t5
 	push.i	#24	 ; push.i &t7
-	call.i	#funname	 ; call.i &funname
+	call.i	#funname	; call.i &funname
 	incsp.i	#12	 ; incsp.i 12
 	mov.i	24,12	 ; mov.i t7,y
 	write.i	12	 ; write.i y

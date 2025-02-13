@@ -91,6 +91,7 @@ subprogram_head:
         symtable[$2].token = FUNCTION;
         symtable[$2].type = $6;
         symtable[$2].address = offset;
+        symtable[$2].isGlobal = false;
         symtable[$2].isReference = true;
 
         std::vector<symbol_t>args;
@@ -104,10 +105,14 @@ subprogram_head:
 
     }
     | PROCEDURE ID {
-
+        gencode_label($2);
     } arguments ';' {
 
+        offset = 8;
         symtable[$2].token = PROCEDURE;
+        symtable[$2].address = offset;
+        symtable[$2].isGlobal = false;
+        symtable[$2].isReference = true;
 
         std::vector<symbol_t>args;
         for(auto arg: listArgs) {
@@ -140,11 +145,10 @@ parametr_list:
 parametr:
     identifier_list ':' type {
         for (auto symbolIndex : listID) {
-            symbol_t* symbol = &symtable[symbolIndex];
-            symbol->type = $3;
-            symbol->token = VAR;
-            symbol->isGlobal = false;
-            symbol->isReference = true;
+            symtable[symbolIndex].type = $3;
+            symtable[symbolIndex].token = VAR;
+            symtable[symbolIndex].isGlobal = false;
+            symtable[symbolIndex].isReference = true;
         }
         listArgs.insert(listArgs.end(), listID.begin(), listID.end());
         listID.clear();

@@ -69,6 +69,9 @@
         "xmemory": "cpp",
         "xtr1common": "cpp",
         "xutility": "cpp",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "ranges": "cpp",
+        "span": "cpp",
+        "stack": "cpp"
     }
 }

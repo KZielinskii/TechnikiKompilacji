@@ -16,14 +16,14 @@ std::string machineOperand(int index) {
     symbol_t sym = symtable.at(index);
     std::string ret = "";
     
-    if(sym.isReference) {
+    if(sym.isReference || sym.token == FUNCTION) {
         ret += "*";
     }
-    if(!sym.isGlobal) {
+    if(!sym.isGlobal || sym.token == FUNCTION) {
         ret += "BP";
         ret += (sym.address>=0 ? "+": "");
     }
-    if(sym.token==VAR || sym.isReference) {
+    if(sym.token==VAR || sym.isReference || sym.token == FUNCTION) {
         ret += std::to_string(sym.address);
         return ret;
     }
@@ -290,8 +290,12 @@ void gencode_push(int index, symbol_t expected) {
 }
 
 void gencode_call(int index) {
-    symtable[index].isReference=false;
-    gencode_ref("call.i", index, -1);
+    std::ostringstream oss;
+
+    symbol_t sym = symtable[index];
+    oss << "\t" << "call.i" << "\t" << "#" << sym.name << "\t";
+    oss << "; " << "call.i" << " " << "&" << sym.name;
+    addCodeLine(oss.str());
 }
 
 void gencode_incsp(int incsp) {
