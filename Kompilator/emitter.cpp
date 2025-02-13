@@ -86,7 +86,13 @@ void gencode_ref(std::string m, int index1, int index2) { // index = -1 jeżeli 
     if(index2!=-1)
     oss << "," << symbolicOperand(index2);
 
-    addCodeLine(oss.str());
+    std::string codeLine = oss.str();
+    size_t pos;
+    while ((pos = codeLine.find("#*")) != std::string::npos) {
+        codeLine.replace(pos, 2, " ");
+    }
+
+    addCodeLine(codeLine);
 }
 
 void gencode_label(int index) {
