@@ -2,7 +2,7 @@ program example(input, output);
 var x, y: integer;
 
 function funname(a, b: integer): integer;
-var lo: integer;
+var lo, la: integer;
 
 begin
 funname := a;
