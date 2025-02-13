@@ -76,7 +76,9 @@ extern int yydebug;
     WHILE = 277,                   /* WHILE  */
     DO = 278,                      /* DO  */
     RELOP = 279,                   /* RELOP  */
-    NOT = 280                      /* NOT  */
+    NOT = 280,                     /* NOT  */
+    FUNCTION = 281,                /* FUNCTION  */
+    PROCEDURE = 282                /* PROCEDURE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif

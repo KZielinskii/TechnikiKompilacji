@@ -2,7 +2,7 @@
 
 std::vector<symbol_t> symtable;
 int tempCounter = 0;
-int labelCounter = 1;
+int labelCounter = 0;
 
 void initSymtable()
 {
@@ -42,7 +42,13 @@ int newTemp(int type) {
     newSymbol.name = "t"+ std::to_string(tempCounter);
     newSymbol.token = VAR;
     newSymbol.type = type;
-    newSymbol.address = getTempAddress((type == INT) ? 4 : 8);
+    int size = (type == INT) ? 4 : 8;
+    if (contextGlobal) {
+        newSymbol.address = getTempAddress(size);
+    } else {
+        newSymbol.address = getLocalAddress(size);
+    }
+    newSymbol.isGlobal = contextGlobal;
     tempCounter++;
 
     symtable.push_back(newSymbol);
@@ -63,9 +69,22 @@ int newNumber(int number) {
     symbol_t newSymbol;
     newSymbol.name = std::to_string(number);
     newSymbol.token = NUM;
+    newSymbol.isGlobal = contextGlobal;
 
     symtable.push_back(newSymbol);
     return symtable.size() - 1;
+}
+
+symbol_t newArgument(int type)
+{
+  symbol_t newSymbol;
+  newSymbol.name = "arg";
+  newSymbol.type = type;
+  newSymbol.token = NONE;
+  newSymbol.isGlobal = contextGlobal;
+
+  newSymbol.address = 0xFFFF;
+  return newSymbol;
 }
 
 bool isReal(int index) {
@@ -79,7 +98,7 @@ void printSymtable()
   for (auto symbol : symtable)
   {
     std::cout
-        << i++ << " " << token_name(symbol.token) << "\t" << symbol.name << "\t" << ((symbol.token == VAR) ? ((symbol.type == INT) ? "INT" : "REAL") : "") << "\t"
-        << ((symbol.token == VAR) ? "\t" + std::to_string(symbol.address) : "")<< std::endl;
+        << i++ << " " << token_name(symbol.token) << "\t" << symbol.name << "\t" << ((symbol.token == VAR || symbol.token == FUNCTION) ? ((symbol.type == INT) ? "INT" : "REAL") : "") << "\t"
+        << ((symbol.token == VAR) ? "\t" + std::to_string(symbol.address) : "")<< " " <<(symbol.isGlobal ? "GLOBAL" : "LOCAL") << " " << (symbol.isReference ? "P" : "N") <<std::endl;
   }
 }

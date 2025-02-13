@@ -9,6 +9,9 @@ struct symbol_t
   int type;
   int token;
   int address;
+  bool isGlobal;
+  bool isReference = false;
+  std::vector<symbol_t> arguments;
 };
 
 #endif
