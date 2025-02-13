@@ -68,5 +68,24 @@ end.
 
 
 
+==============================================
+
+program example(input, output);
+
+var a: integer;
+
+begin
+
+while a < 5 do
+begin
+a := a+1
+end;
+
+write(a)
+
+end.
+
+
+
 
 
