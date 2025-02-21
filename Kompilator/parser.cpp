@@ -1378,7 +1378,7 @@ yyreduce:
   case 33: /* @6: %empty  */
 #line 180 "parser.y"
                     {
-       yyval = gencode_if(yyvsp[0]);
+       yyval = yyvsp[0];
     }
 #line 1384 "parser.cpp"
     break;

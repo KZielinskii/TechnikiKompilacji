@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall -Werror -Wno-error=unused-function
+CFLAGS = -g -Wall -Werror -Wno-error=unused-function
 
 SRCS = emitter.cpp main.cpp symbol.cpp tokens.cpp lexer.cpp parser.cpp
 OBJS = $(SRCS:.cpp=.o)

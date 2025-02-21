@@ -178,7 +178,7 @@ statement:
     | procedure_statement 
     | compound_statement
     | IF expression {
-       $$ = gencode_if($2);
+       $$ = $2;
     } THEN {
        $$ = gencode_then($3);
     } 

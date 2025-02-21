@@ -21,6 +21,20 @@ write(y)
 end.
 
 
+==============================================
+
+program example(input, output);
+var x, y: integer;
+
+begin
+read(x, y);
+
+if x<y then x:=y
+else y:=x;
+
+write(y) 
+end.
+
 
 ==============================================
 

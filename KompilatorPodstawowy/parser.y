@@ -15,7 +15,9 @@ void yyerror(const char* s);
 %%
 
 program:
-    PROGRAM ID '(' identifier_list ')' ';'
+    PROGRAM ID '(' identifier_list ')' ';' {
+        listID.clear();
+    }
     declarations 
     compound_statement 
     '.'

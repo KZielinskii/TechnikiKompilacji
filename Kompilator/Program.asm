@@ -1,16 +1,18 @@
 	jump.i #lab0	 ;jump.i  lab0
 lab0:
-lab2:
-	jl.r	16,#10,#lab3	 ; jl.r a,10,lab3
-	mov.i	#0,24	 ; mov.i 0,t0
-	jump.i	#lab4	 ; jump.i lab4
-lab3:
-	mov.i	#1,24	 ; mov.i 1,t0
-lab4:
-	je.i	24,#0,#lab1	 ; je.i t0,0,lab1
-	add.r	16,#1.1,28	 ; add.r a,1.1,t1
-	mov.r	28,16	 ; mov.r t1,a
+	read.i	8	 ; read.i x
+	read.i	12	 ; read.i y
+	jl.i	8,12,#lab1	 ; jl.i x,y,lab1
+	mov.i	#0,16	 ; mov.i 0,t0
 	jump.i	#lab2	 ; jump.i lab2
 lab1:
-	write.r	16	 ; write.r a
+	mov.i	#1,16	 ; mov.i 1,t0
+lab2:
+	je.i	16,#0,#lab3	 ; je.i t0,0,lab3
+	mov.i	12,8	 ; mov.i y,x
+	jump.i	#lab4	 ; jump.i lab4
+lab3:
+	mov.i	8,12	 ; mov.i x,y
+lab4:
+	write.i	12	 ; write.i y
 	exit	;exit

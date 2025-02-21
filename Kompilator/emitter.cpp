@@ -177,47 +177,43 @@ int gencode_relop(int op, int index1, int index2) {
             return -1;
     }
 
-    int indexLabel = newLabel();
-    gencode(opType, index1, index2, indexLabel);
+    int setLabel = newLabel();
+    gencode(opType, index1, index2, setLabel);
+    
+    int newTempIndex = newTemp(INT); //int bo ma przechować 0 lub 1 jeśli jest prawdziwe
+    int newNumberIndex = newNumber(0);
+    int endLabel = newLabel();
 
-    return indexLabel;
+    gencode("mov.i", newNumberIndex, newTempIndex,-1);
+    gencode("jump.i", endLabel, -1, -1);
+    gencode_label(setLabel);
+    newNumberIndex = newNumber(1);
+    gencode("mov.i", newNumberIndex, newTempIndex,-1);
+    gencode_label(endLabel);
+
+    return newTempIndex;
+
 }
 
 // index label stworzonego w relop
 int gencode_if(int index1) {
-    int newTempIndex = newTemp(INT); //int bo ma przechować 0 lub 1 jeśli jest prawdziwe
-    int newNumberIndex = newNumber(0);
-
-    gencode("mov.i", newNumberIndex, newTempIndex,-1);
-
-    int newLabelIndex = newLabel();
-    gencode("jump.i", newLabelIndex, -1, -1);
-    gencode_label(index1);
-
-    newNumberIndex = newNumber(1);
-    gencode("mov.i", newNumberIndex, newTempIndex,-1);
-    gencode_label(newLabelIndex);
-
-    return newTempIndex;
+    return index1;
 }
 
-// index temp sworzonego w if
 int gencode_then(int index1) {
     int newNumberIndex = newNumber(0);
-    int newLabelIndex = newLabel();
+    int elseLabel = newLabel();
+    gencode("je.i", index1, newNumberIndex, elseLabel);
 
-    gencode("je.i", index1, newNumberIndex, newLabelIndex);
-
-    return newLabelIndex;
+    return elseLabel;
 }
 
-//index label sworzonego w then
 int gencode_else(int index1) {
-    int newLabelIndex = newLabel();
-    gencode("jump.i", newLabelIndex, -1, -1);
-
+    int endLabel = newLabel();
+    gencode("jump.i", endLabel, -1, -1);
     gencode_label(index1);
-    return newLabelIndex;
+
+    return endLabel;
 }
 
 int gencode_while() {
