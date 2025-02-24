@@ -245,6 +245,7 @@ int gencode_not(int index) {
         indexToNot = newIndexTemp;
     }
     int newIndexLabel = newLabel();
+    symtable[newIndexLabel].type = INT;
     int newIndexNumber = newNumber(0);
     gencode("je.i", indexToNot, newIndexNumber, newIndexLabel);
     return gencode_if(newIndexLabel);

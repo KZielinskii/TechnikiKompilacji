@@ -69,6 +69,7 @@ int newNumber(int number) {
     symbol_t newSymbol;
     newSymbol.name = std::to_string(number);
     newSymbol.token = NUM;
+    newSymbol.type = INT;
     newSymbol.isGlobal = contextGlobal;
 
     symtable.push_back(newSymbol);

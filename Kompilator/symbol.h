@@ -12,6 +12,7 @@ struct symbol_t
   bool isGlobal = true;
   bool isReference = false;
   std::vector<symbol_t> arguments;
+
 };
 
 #endif
