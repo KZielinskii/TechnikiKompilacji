@@ -94,3 +94,19 @@ end.
 
 ===================================================
 
+program example(input, output);
+
+var 
+  a, b, c, d: integer;
+
+begin
+  a := 1;
+  b := 0;
+  c := a and b;
+  d := a or b;
+  write(c);
+  write(d)
+end.
+
+
+=====================================================

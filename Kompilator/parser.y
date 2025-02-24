@@ -14,7 +14,7 @@ int yylex();
 void yyerror(const char* s);
 %}
 
-%token PROGRAM ID INT REAL VAR NUM LABEL PROC NONE BEG END ASSIGN ADDOP MULOP WRITE READ IF THEN ELSE WHILE DO RELOP NOT FUNCTION PROCEDURE
+%token PROGRAM ID INT REAL VAR NUM LABEL PROC NONE BEG END ASSIGN ADDOP MULOP WRITE READ IF THEN ELSE WHILE DO RELOP NOT FUNCTION PROCEDURE OR_ AND_
 
 %%
 
@@ -255,6 +255,12 @@ simple_expression:
         else if ($2 == SUB) {
             $$ = gencode_op("sub", $1, $3);
         }
+    }
+    | simple_expression AND_ term {
+        $$ = gencode_logic("and", $1, $3);
+    }
+    | simple_expression OR_ term {
+        $$ = gencode_logic("or", $1, $3);
     }
     ;
 

@@ -57,5 +57,6 @@ void gencode_push(int index, symbol_t expected);
 void gencode_startFunc();
 void gencode_endFunc(int index);
 void gencode_incsp(int incsp);
+int gencode_logic(std::string op, int index1, int index2);
 
 

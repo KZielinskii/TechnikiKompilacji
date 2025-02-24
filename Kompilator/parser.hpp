@@ -78,7 +78,9 @@ extern int yydebug;
     RELOP = 279,                   /* RELOP  */
     NOT = 280,                     /* NOT  */
     FUNCTION = 281,                /* FUNCTION  */
-    PROCEDURE = 282                /* PROCEDURE  */
+    PROCEDURE = 282,               /* PROCEDURE  */
+    OR_ = 283,                     /* OR_  */
+    AND_ = 284                     /* AND_  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
