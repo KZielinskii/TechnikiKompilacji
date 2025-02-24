@@ -14,6 +14,9 @@ std::string machineOperand(int index) {
         return std::to_string(-1);
     }
     symbol_t sym = symtable.at(index);
+    if (sym.token != VAR && sym.token != FUNCTION && !sym.isReference) {
+        return ("#" + sym.name);
+    }
     std::string ret = "";
     
     if(sym.isReference || sym.token == FUNCTION) {
@@ -23,11 +26,9 @@ std::string machineOperand(int index) {
         ret += "BP";
         ret += (sym.address>=0 ? "+": "");
     }
-    if(sym.token==VAR || sym.isReference || sym.token == FUNCTION) {
-        ret += std::to_string(sym.address);
-        return ret;
-    }
-    return ("#" + sym.name);
+    
+    ret += std::to_string(sym.address);
+    return ret;
 }
 
 

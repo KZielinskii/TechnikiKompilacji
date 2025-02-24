@@ -99,6 +99,6 @@ void printSymtable()
   {
     std::cout
         << i++ << " " << token_name(symbol.token) << "\t" << symbol.name << "\t" << ((symbol.token == VAR || symbol.token == FUNCTION) ? ((symbol.type == INT) ? "INT" : "REAL") : "") << "\t"
-        << ((symbol.token == VAR) ? "\t" + std::to_string(symbol.address) : "")<< " " <<(symbol.isGlobal ? "GLOBAL" : "LOCAL") << " " << (symbol.isReference ? "P" : "N") <<std::endl;
+        << ((symbol.token == VAR) ? "\t" + std::to_string(symbol.address) : "")<< " " <<(symbol.isGlobal ? "GLOBAL" : "LOCAL") <<std::endl;
   }
 }
