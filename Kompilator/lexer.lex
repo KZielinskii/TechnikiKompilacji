@@ -37,6 +37,9 @@ while       {return WHILE;}
 do          {return DO;}
 not         {return NOT;}
 
+or          {return OR_;}
+and         {return AND_;}
+
 var         {return VAR;}
 integer     {yylval = INT; return INT;}
 real        {yylval = REAL; return REAL;}

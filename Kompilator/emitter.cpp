@@ -319,6 +319,13 @@ void gencode_endFunc(int index)
     gencode("return", -1, -1, -1);
 }
 
+int gencode_logic(std::string op, int index1, int index2) {
+    int index3 = newTemp(INT);
+    gencode(op + ".i", index1, index2, index3);
+    return index3;
+}
+
+
 void saveAsmCode(std::string filename) {
     std::ofstream outFile(filename);
     
