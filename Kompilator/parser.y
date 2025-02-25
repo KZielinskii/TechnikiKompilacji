@@ -89,7 +89,6 @@ subprogram_head:
     FUNCTION ID {
         gencode_label($2);
     } arguments ':' standerd_type ';' {
-
         offset = 8;
         symtable[$2].token = FUNCTION;
         symtable[$2].type = $6;
@@ -108,10 +107,10 @@ subprogram_head:
 
     }
     | PROCEDURE ID {
+        offset = 4;
         gencode_label($2);
     } arguments ';' {
 
-        offset = 4;
         symtable[$2].token = PROCEDURE;
         symtable[$2].address = offset;
         symtable[$2].isGlobal = false;
