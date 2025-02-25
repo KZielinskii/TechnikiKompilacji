@@ -24,15 +24,18 @@ end.
 ==============================================
 
 program example(input, output);
-var x, y: integer;
+var x: integer;
+
+function func(a: integer): integer;
+begin 
+func := a+a
+end;
 
 begin
-read(x, y);
+x := 12;
+x := func(x);
 
-if x<y then x:=y
-else y:=x;
-
-write(y) 
+write(x) 
 end.
 
 
@@ -110,3 +113,60 @@ end.
 
 
 =====================================================
+
+
+program example(input, output);
+
+var x, y: integer;
+
+procedure procname(a, b: integer);
+var result: integer;
+begin
+    result := a + b;
+    write(result)
+end;
+
+begin
+    read(x, y);
+    procname(x, y)
+end.
+
+===================================================
+
+program example(input, output);
+
+var a, b, c: integer;
+var x, y: real;
+
+function AddInt(n1, n2: integer): integer;
+begin
+    AddInt := n1 + n2
+end;
+
+function MultiplyReal(r1, r2: real): real;
+begin
+    MultiplyReal := r1 * r2
+end;
+
+procedure PrintInt(n: integer);
+begin
+    write(n)
+end;
+
+procedure PrintReal(r: real);
+begin
+    write(r)
+end;
+
+begin
+    a := 10;
+    b := 20;
+    c := AddInt(a, b);
+    PrintInt(c);
+
+    x := 2.5;
+    y := 4.0;
+    x := MultiplyReal(x, y);
+    PrintReal(x)
+end.
+

@@ -63,7 +63,7 @@ void gencode(std::string m, int index1, int index2, int index3) { // index = -1 
     if(index3!=-1)
     oss << "," << machineOperand(index3);
 
-    oss << "\t ; " << m << " ";
+    oss << "\t\t\t ; " << m << " ";
     if(index1!=-1)
     oss << symbolicOperand(index1);
     if(index2!=-1)
@@ -81,7 +81,7 @@ void gencode_ref(std::string m, int index1, int index2) { // index = -1 jeżeli 
     if(index2!=-1)
     oss << "," << machineOperand(index2); 
 
-    oss << "\t ; " << m << " ";
+    oss << "\t\t\t ; " << m << " ";
     if(index1!=-1)
     oss << "&" << symbolicOperand(index1);
     if(index2!=-1)
@@ -243,7 +243,7 @@ int gencode_not(int index) {
     symtable[notConditionLabel].type = INT;
     int newIndexNumber = newNumber(0);
     gencode("je.i", indexToNot, newIndexNumber, notConditionLabel);
-    return gencode_if(notConditionLabel);
+    return notConditionLabel;
 }
 
 //index operanda przed którym jest -

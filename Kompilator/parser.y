@@ -22,6 +22,9 @@ program:
     PROGRAM ID {
         startLabel = newLabel();
     }'(' identifier_list ')' ';'
+    {
+        listID.clear();
+    }
     declarations 
     subprogram_declarations
     {
@@ -86,7 +89,6 @@ subprogram_head:
     FUNCTION ID {
         gencode_label($2);
     } arguments ':' standerd_type ';' {
-
         offset = 8;
         symtable[$2].token = FUNCTION;
         symtable[$2].type = $6;
@@ -105,10 +107,10 @@ subprogram_head:
 
     }
     | PROCEDURE ID {
+        offset = 4;
         gencode_label($2);
     } arguments ';' {
 
-        offset = 8;
         symtable[$2].token = PROCEDURE;
         symtable[$2].address = offset;
         symtable[$2].isGlobal = false;
@@ -218,8 +220,29 @@ variable:
     ;
 
 procedure_statement:
-    ID 
-    | ID '(' expression_list ')'
+    ID {
+        gencode_call($1); //procedura bez argumentów
+    }
+    | ID '(' expression_list ')' {
+        symbol_t proc = symtable[$1];
+
+        if (proc.arguments.size() != listID.size()) {
+            yyerror("Zła ilość argumentów procedury!");
+        }
+
+        int incsp = 0;
+
+        for (int i = 0; i < int(listID.size()); i++) { 
+            symbol_t expected = proc.arguments[i];
+            gencode_push(listID[i], expected);
+            incsp += 4;
+        }
+        listID.clear();
+        gencode_call($1);
+
+        int index = newNumber(incsp);
+        gencode_incsp(index);
+    }
     ;
 
 expression_list:
