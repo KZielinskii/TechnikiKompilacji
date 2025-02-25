@@ -196,11 +196,6 @@ int gencode_relop(int op, int index1, int index2) {
 
 }
 
-// index label stworzonego w relop
-int gencode_if(int index1) {
-    return index1;
-}
-
 int gencode_then(int index1) {
     int newNumberIndex = newNumber(0);
     int elseLabel = newLabel();
@@ -224,7 +219,7 @@ int gencode_while() {
 }
 
 //index1 temp sworzonego w if index2 label do którego skok z while
-int gencode_while_then(int index1, int index2) {
+int gencode_while_do(int index1, int index2) {
     int newNumberIndex = newNumber(0);
     gencode("je.i", index1, newNumberIndex, index2);
     return index2;
