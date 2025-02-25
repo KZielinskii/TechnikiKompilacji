@@ -110,3 +110,22 @@ end.
 
 
 =====================================================
+
+
+program example(input, output);
+
+var x, y: integer;
+
+procedure procname(a, b: integer);
+var result: integer;
+begin
+    result := a + b;
+    write(result)
+end;
+
+begin
+    read(x, y);
+    procname(x, y)
+end.
+
+
