@@ -178,21 +178,21 @@ int gencode_relop(int op, int index1, int index2) {
             return -1;
     }
 
-    int setLabel = newLabel();
-    gencode(opType, index1, index2, setLabel);
+    int trueConditionLabel = newLabel();
+    gencode(opType, index1, index2, trueConditionLabel);
     
-    int newTempIndex = newTemp(INT); //int bo ma przechować 0 lub 1 jeśli jest prawdziwe
+    int resultTempIndex = newTemp(INT); //int bo ma przechować 0 lub 1 jeśli jest prawdziwe
     int newNumberIndex = newNumber(0);
-    int endLabel = newLabel();
+    int exitLabel = newLabel();
 
-    gencode("mov.i", newNumberIndex, newTempIndex,-1);
-    gencode("jump.i", endLabel, -1, -1);
-    gencode_label(setLabel);
+    gencode("mov.i", newNumberIndex, resultTempIndex,-1);
+    gencode("jump.i", exitLabel, -1, -1);
+    gencode_label(trueConditionLabel);
     newNumberIndex = newNumber(1);
-    gencode("mov.i", newNumberIndex, newTempIndex,-1);
-    gencode_label(endLabel);
+    gencode("mov.i", newNumberIndex, resultTempIndex,-1);
+    gencode_label(exitLabel);
 
-    return newTempIndex;
+    return resultTempIndex;
 
 }
 
@@ -205,20 +205,20 @@ int gencode_then(int index1) {
 }
 
 int gencode_else(int index1) {
-    int endLabel = newLabel();
-    gencode("jump.i", endLabel, -1, -1);
+    int exitLabel = newLabel();
+    gencode("jump.i", exitLabel, -1, -1);
     gencode_label(index1);
 
-    return endLabel;
+    return exitLabel;
 }
 
 int gencode_while() {
-    int newLabelIndex = newLabel();
-    gencode_label(newLabelIndex);
-    return newLabelIndex;
+    int loopStartLabel = newLabel();
+    gencode_label(loopStartLabel);
+    return loopStartLabel;
 }
 
-//index1 temp sworzonego w if index2 label do którego skok z while
+//index1 label stworzonego w relop, index2 label do którego skok z while
 int gencode_while_do(int index1, int index2) {
     int newNumberIndex = newNumber(0);
     gencode("je.i", index1, newNumberIndex, index2);
@@ -239,11 +239,11 @@ int gencode_not(int index) {
         gencode_realToInt(index, newIndexTemp);
         indexToNot = newIndexTemp;
     }
-    int newIndexLabel = newLabel();
-    symtable[newIndexLabel].type = INT;
+    int notConditionLabel = newLabel();
+    symtable[notConditionLabel].type = INT;
     int newIndexNumber = newNumber(0);
-    gencode("je.i", indexToNot, newIndexNumber, newIndexLabel);
-    return gencode_if(newIndexLabel);
+    gencode("je.i", indexToNot, newIndexNumber, notConditionLabel);
+    return gencode_if(notConditionLabel);
 }
 
 //index operanda przed którym jest -
