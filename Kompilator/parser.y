@@ -190,16 +190,16 @@ statement:
     statement {
         gencode_label($8);
     }
-    | {
-        $$ = newLabel();
-    }WHILE {
+    | WHILE {
         $$ = gencode_while();
     }
     expression DO {
-        $$ = gencode_while_do($4,$1);
+        int label = newLabel();
+        gencode_while_do($3,label);
+        $$ = label;
     }
     statement {
-       gencode_end_while($1 ,$3);
+       gencode_end_while($5 ,$2);
     }
     | READ '(' expression_list ')' { 
         for (auto id : listID) {

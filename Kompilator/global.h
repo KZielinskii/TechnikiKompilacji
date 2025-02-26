@@ -45,7 +45,7 @@ int gencode_relop(int op, int index1, int index2);
 int gencode_then(int index1);
 int gencode_else(int index1);
 int gencode_while();
-int gencode_while_do(int index1, int index2);
+void gencode_while_do(int index1, int index2);
 void gencode_end_while(int index1, int index2);
 int gencode_not(int index);
 int gencode_sign(int index);

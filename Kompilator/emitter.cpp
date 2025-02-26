@@ -219,10 +219,9 @@ int gencode_while() {
 }
 
 //index1 label stworzonego w relop, index2 label do którego skok z while
-int gencode_while_do(int index1, int index2) {
+void gencode_while_do(int index1, int index2) {
     int newNumberIndex = newNumber(0);
     gencode("je.i", index1, newNumberIndex, index2);
-    return index2;
 }
 
 // index1 label do którego skok kiedy niespełnion index2 label spełniono
